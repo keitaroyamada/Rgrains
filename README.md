@@ -18,7 +18,11 @@ green: small circles that fits in the corner concaveture
 ## Install
 
 ## Usage
+The Rgrains has two versions: CUI and GUI. Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated "rcalculator". The usage of each version is as follows.
+
 ### CUI version
+
+[simple_example.m](https://github.com/keitaroyamada/Rgrains/blob/5f6a46785e832ffa46798b60db9925339448d1b3/Simple_example.m)
 
 #### 1. make Rgrains instance
 
@@ -33,6 +37,9 @@ imshow(rgrains.im_in)
 title('Input image')
 
 #### 3. binarise
+R binarizes the image. Binarization depends on GG. Binarization is performed adaptively by GG by default, but depending on the contrast of the image, it may not reproduce the exact particle contours. You should always check the binarized image for the best settings for each image. Binarization is controlled using opts_binarise.
+
+
 %binarise image
 rgrains.opts_binarise = struct('upconvert', true,...
                                'particle_color', 'Dark',...
