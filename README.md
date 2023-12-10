@@ -8,10 +8,18 @@ However, measuring the "Roundness" of natural particles with complex shapes is d
 
 Recently, with the advancement of digital technologies like cameras and computers, it has become possible to measure various shapes, including the theoretical "Roundness" defined by Wadell, more objectively and quickly. For example, Zheng & Hryciw (2015) succeeded in calculating "Roundness" by fitting small circles to the contours of particles in images. Furthermore, Fukuda & Naruse (2020) succeeded in quantifying shapes by applying Elliptic Fourier Analysis to the contours of particles in images. Thus, with the evolution of digital technologies, particle shape analysis has achieved unprecedented levels of precision and speed.
 
-Rgrains is an image analysis software equipped with a series of functions for extracting contours from images, measuring shapes, and outputting results as images or tables. Rgrains can calculate the area, circularity, major and minor axis lengths of particles. Furthermore, this software, drawing upon Cheng's (2015) innovative techniques, can also calculate "Roundness" according to Wadell's definition. In a way, it can be considered a wrapper software for Zheng & Hryciw (2015)'s program. Ishimura & Yamada (2019) used Rgrains to analyse the shapes of gravel in tsunami deposits, estimating the magnitude of past tsunamis based on the similarity between terrain and particle shapes. In this way, Rgrains equips researchers with a nuanced understanding of particle dynamics, facilitating a deeper exploration of particle behaviour. We sincerely hope that this application, Rgrains, will significantly expand the horizons of scientific inquiry, opening new avenues for research and fostering a deeper, more comprehensive understanding in the field.
+Rgrains is an image analysis software equipped with a series of functions for extracting contours from images, measuring shapes, and outputting results as images or tables. Rgrains can calculate the area, circularity, major and minor axis lengths of particles. Furthermore, this software, drawing upon Zheng & Hryciw's (2015) innovative techniques, can also calculate "Roundness" according to Wadell's definition. In a way, it can be considered a wrapper software for Zheng & Hryciw (2015)'s program. Ishimura & Yamada (2019) used Rgrains to analyse the shapes of gravel in tsunami deposits, estimating the magnitude of past tsunamis based on the similarity between terrain and particle shapes. In this way, Rgrains equips researchers with a nuanced understanding of particle dynamics, facilitating a deeper exploration of particle behaviour. We sincerely hope that this application, Rgrains, will significantly expand the horizons of scientific inquiry, opening new avenues for research and fostering a deeper, more comprehensive understanding in the field.
 
 
-## 2. Roundness definition
+## 2. Methods of measuremnt and calculation
+### 2.0. Pretreatments
+Rgrains can measure and calculate the shape of particles in the image. Binarised images are used for the measurement, but the images must adequately represent the contours of the particles. Suitable images for binarisation are those with sufficient resolution, homogeneous brightness, a deep depth of field, and a large contrast between the particles and the background. Specifically, the major axis lenngth of the particles should be at least 200 pix. In addition, to obtain a homogeneous, high-contrast particle silhouette, the use of backlight panels, such as tracing stands, is suitable. However, any method is acceptable as long as the final result is a binarised image with well-reproduced particle contours. After taking images, the images are binarised using matlab's built-in functions of [imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html). Please apply the appropriate method to the image. See link for details.
+
+### 2.1. Area, major/minor length, Circularity and aspect ratio
+
+
+### 2.2.Roundness
+#### 2.2.1. Definition
 The roundness is one of the useful parameters for grain shapes. The definition is extremely simple as below.
 
 $$Roundness = \left({1 \over n} \sum_{k=1}^n r_k \right)/R_{max}$$
@@ -25,8 +33,7 @@ red: maximum inscribed circle
 orange: corner concaveture
 
 green: small circles that fits in the corner concaveture
-
-## 3. Methods
+#### 2.2.2.
 
 
 ## 4. Requirements (test emvironments)
@@ -255,3 +262,4 @@ rgrains.export(save_dir)
 - [Zheng & Hryciw (2015) Traditional soil particle sphericity, roundness and surface roughness by computational geometry](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)
   - [source code](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation)
 - [Ishimura & Yamada (2019) Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://www.nature.com/articles/s41598-019-46584-z)
+- [Fukuda & Naruse (2020) Shape difference of mud clasts depending on depositional facies: application of newly modified elliptic Fourier analysis to hybrid event beds](https://doi.org/10.2110/jsr.2020.67)
