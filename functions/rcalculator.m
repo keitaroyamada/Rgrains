@@ -449,6 +449,11 @@ classdef rcalculator < handle
         end
     
         function [] = export(obj, save_dir)
+            if exist(save_dir)~=7
+                disp("There is no such a directory.")
+                return
+            end
+            
             warning('off')
             mkdir(save_dir);
             warning('on')

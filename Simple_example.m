@@ -4,7 +4,8 @@ clear;
 rgrains = rcalculator();
 
 %load image
-rgrains.loadImage('image full path')
+[im_name, im_dir] = uigetfile();
+rgrains.loadImage(fullfile(im_dir, im_name))
 figure
 imshow(rgrains.im_in)
 title('Input image')
@@ -65,4 +66,5 @@ rgrains.opts_export = struct('save_bw_image',true,...
                          'save_csv',true,...
                          'save_settings',true);
 
-rgrains.export('save directory path')
+[save_dir] =uigetdir()
+rgrains.export(save_dir)
