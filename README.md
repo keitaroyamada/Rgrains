@@ -30,10 +30,15 @@ where $R_{max}$ is the radious of maximum inscribed circle, $n$ is number of cor
 
 red: maximum inscribed circle
 
-orange: corner concaveture
+orange: corner convex curve
 
 green: small circles that fits in the corner concaveture
-#### 2.2.2.
+
+#### 2.2.2. Calculation
+Rgrains calculates "Roundness" using the modified (program)[https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation] of [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192). See link for details. Briefly, the critical process is divided into three parts:  
+1. detecting counters
+2. detecting convex curve
+3. fitting small circles
 
 
 ## 4. Requirements (test emvironments)
