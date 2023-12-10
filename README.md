@@ -18,7 +18,8 @@ green: small circles that fits in the corner concaveture
 
 ## 3. Methods
 
-## 4. Requirements
+
+## 4. Requirements (test emvironments)
 ### 4.1. CUI version and GUI version (matlab app)
 - Matlab > 9.13 
 - Image processing toolbox > 11.6
@@ -26,7 +27,8 @@ green: small circles that fits in the corner concaveture
 - Statistics and Machine Learning Toolbox > 12.4
 
 ### 4.2. GUI version (executable file) 
-- Windows 10, 11
+- Windows 10, 11 (Intel)
+- Mac Sonoma 14.1.1 (Apple M1)
 
 
 ## 5. Install
