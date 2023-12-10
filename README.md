@@ -179,7 +179,24 @@ rgrains.makeSummaryImage(gca)
 ```
 
 #### 6. export the results
-%export results
+Writes the calculation results as files. The supported options are as follows.
+##### - 'save_bw_image' ["true", "false", (default: "true")]
+Save binarised image in jpeg.
+##### - 'save_fitted_image_with_No' ["true", "false", (default: "true")]
+Save fitted image with particle number in jpeg.
+##### - 'save_fitted_image_with_Roundness' ["true", "false", (default: "true")]
+Save fitted image with roundness value in jpeg.
+##### - 'save_fitted_image_vector' ["true", "false", (default: "true")]
+Save fitted image in editable format of svg.
+##### - 'save_summary_image' ["true", "false", (default: "true")]
+Save statistical summary image in png.
+##### - 'save_csv' ["true", "false", (default: "true")]
+Save results table in csv.
+##### - 'save_settings' ["true", "false", (default: "true")]
+Save calculation settings in csv.
+
+```
+% set export settings
 rgrains.opts_export = struct('save_bw_image',true,...
                          'save_fitted_image_with_No',true,...
                          'save_fitted_image_with_Roundness',true,...
@@ -188,6 +205,9 @@ rgrains.opts_export = struct('save_bw_image',true,...
                          'save_csv',true,...
                          'save_settings',true);
 
+%export results
 rgrains.export('save directory path')
+```
+
 ### GUI version
 
