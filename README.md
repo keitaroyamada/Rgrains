@@ -16,7 +16,7 @@ Rgrains is an image analysis software equipped with a series of functions for ex
 Rgrains can measure and calculate the shape of particles in the image. Binarised images are used for the measurement, but the images must adequately represent the contours of the particles. Suitable images for binarisation are those with sufficient resolution, homogeneous brightness, a deep depth of field, and a large contrast between the particles and the background. Specifically, the major axis lenngth of the particles should be at least 200 pix. In addition, to obtain a homogeneous, high-contrast particle silhouette, the use of backlight panels, such as tracing stands, is suitable. However, any method is acceptable as long as the final result is a binarised image with well-reproduced particle contours. After taking images, the images are binarised using matlab's built-in functions of [imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html). Please apply the appropriate method to the image. See link for details.
 
 ### 2.1. Area, major/minor length, Circularity and aspect ratio
-
+After binarisation, Rgrains crops out the particle and its surrounding area. At this time, if the PCD normalisation option is enable, it calculates the particle's circumscribed circle and resizes the image so that the size of the circumscribed circle is the size you specified. The cropped binarised image is then measured for its are, major axis length, minor axis length, aspect ration and circularity using matlab's built-in function of [regionprops](https://jp.mathworks.com/help/images/ref/regionprops.html). See link for details.
 
 ### 2.2.Roundness
 #### 2.2.1. Definition
