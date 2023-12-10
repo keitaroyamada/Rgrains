@@ -144,7 +144,7 @@ subplot(1,2,2)
 ```
 
 #### 6.1.4. calculate roundness and other properties
-Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
+Roundness is calculated from the binarised image. See Methods of measuremnt and calculation for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
 
 The supported options are as follows.
 - *'trace_precision'* [0-1 (default: 0.0600)]  
@@ -269,10 +269,60 @@ All settings for Rgrains can be saved from [File > Save settings]. The setting f
 Images can be loaded from the load button at the top. Pressing the load button activates the file chooser, which allows you to select an image with the specified extension (e.g. jpg). The specified extension can be changed from [settings > Acquisition > image type].
 
 #### 6.2.2. Binarise image
-#### 6.2.3. Calculate Roundness
-#### 6.2.4. Export results
-#### 6.2.5. Batch process
+Rgains requires binarisation to measure particle shape. Pressing the Binarise button to start binarisation. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default setting of "Adaptive", but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using  options.
 
+- *'Particle_color'* ["Dark", "Bright" (default: "Dark")]  
+Specifies the relative brightness of particles in the image to distinguish between background and particles.
+- *'Method'* ['Adaptive', 'Otsu' (default: "Adaptive")]  
+Specifies the binarisation method. See link for more information.
+[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
+- *'Sensitivity'*, [0-1 (default: 0.35)]  
+Specifies the binarisation threshold. See link for more information.
+[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
+- *'noise_thresholds'*[0-Inf (default: [490 Inf])] ($pix^2$)  
+Specify the size of particles to be detected by using lower and upper area($pix^2$) limits.
+- *'Image scale'* [0-Inf (default: 340)] ($pix/cm$)  
+Rgrains returns results with dimensions such as area($cm^2$) and major axis($cm$) as well as dimensionless such as Roundness and aspect ratio. To give these results an actual length, it is necessary to give how many pixels 1 cm is.
+- *'Settings > Binarisation > Upconvert'* ["true", "false" (default: "false")] (heavy option)  
+To reduce the effects of image jaggies, Rgrains stretch(x2) and interpolate the image by using "[imresize](https://jp.mathworks.com/help/matlab/ref/imresize.html)" This process is not always necessary.
+- *'Settings > Binarisation > ignore particles on borders'* ["true", "false" (default: "false")]  
+Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
+
+#### 6.2.3. Calculate Roundness
+Roundness is calculated from the binarised image. Press the Analysis button to start calculate roundness and other parameters. See Methods of measuremnt and calculation for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
+
+The supported options are as follows.
+- *'Trace precision'* [0-1 (default: 0.0600)]  
+Parameters required to make a discrete edge composed of pixels a smooth function. See link for more information.
+[smooth](https://jp.mathworks.com/help/curvefit/smooth.html#mw_7695cbca-640d-4029-a239-81c9dd8192d0)
+- *'Corner sensitivity'* [0-1 (default: 0.0170)]  
+Sensitivity to detect convex corners from smooth contours.
+- *'Circle precision'* [0-1 (default: 0.9960)]  
+Fitting accuracy of the small circle that fits the detected convex corner.
+- *'Settings > Analysis > Apply PCD normarisation'* ["true", "false" (default: "true")]  
+Too large a difference in particle size can affect calculation performance and results. To avoid this effect, normalise the particle image size using the particle's circumscribed circle diameter. This can be expected to improve fitting of small particles and speed up the process for large particles.
+- *'PCD threshold'* [0-Inf (default: 200)] ($pix$)  
+The circumscribed circle diameter to be normalised. It is recommended to use a value of at least 200pix for the diameter of the circumscribed circle.
+
+#### 6.2.4. Export results
+Writes the calculation results as files. Press the Export button to start export process. The supported options are as follows.
+- *'Settings > Export > Save BW image'* ["true", "false", (default: "true")]  
+Save binarised image in jpeg.
+- :'Settings > Export > Save fitted image with Number'* ["true", "false", (default: "true")]  
+Save fitted image with particle number in jpeg.
+- *'Settings > Export > Save fitted image with Roundness'* ["true", "false", (default: "true")]  
+Save fitted image with roundness value in jpeg.
+- *'Settings > Export > Save fitted image as vector'* ["true", "false", (default: "false")]  
+Save fitted image in editable format of eps.
+- *'Settings > Export > Save summary image'* ["true", "false", (default: "true")]  
+Save statistical summary image in png.
+- *'Settings > Export > Save csv'* ["true", "false", (default: "true")]  
+Save results table in csv.
+- *'Settings > Export > Save settings'* ["true", "false", (default: "false")]  
+Save calculation settings in csv.
+
+#### 6.2.5. Batch process
+Press the [Batch > Run from folder] to start batch process. In this process, specify the source folder that contains the images and the save folder in which to save the results. Rgrains processes all images of a given extension contained in the source folder according to the settings set in turn.
 
 ## 7. References
 - [Wadell (1932) Volume, Shape, and Roundness of Rock Particles](https://www.journals.uchicago.edu/doi/10.1086/623964)
