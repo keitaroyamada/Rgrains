@@ -305,7 +305,7 @@ Too large a difference in particle size can affect calculation performance and r
 The circumscribed circle diameter to be normalised. It is recommended to use a value of at least 200pix for the diameter of the circumscribed circle.
 
 #### 6.2.4. Export results
-Writes the calculation results as files. Press the Export button to start export process. The supported options are as follows.
+To writes the calculation results as files, please press the "Export" button. The supported options are as follows.
 - *'Settings > Export > Save BW image'* ["true", "false", (default: "true")]  
 Save binarised image in jpeg.
 - :'Settings > Export > Save fitted image with Number'* ["true", "false", (default: "true")]  
@@ -322,7 +322,7 @@ Save results table in csv.
 Save calculation settings in csv.
 
 #### 6.2.5. Batch process
-Press the [Batch > Run from folder] to start batch process. In this process, specify the source folder that contains the images and the save folder in which to save the results. Rgrains processes all images of a given extension contained in the source folder according to the settings set in turn.
+Click the '[Batch > Run from folder]' button to initiate the batch process. During this process, you need to specify the 'Source Folder' that contains the images and the 'Save Folder' for saving the results. The Rgrains software will then process all images with a specified extension in the source folder, following the predefined settings.
 
 ## 7. References
 - [Wadell (1932) Volume, Shape, and Roundness of Rock Particles](https://www.journals.uchicago.edu/doi/10.1086/623964)
