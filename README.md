@@ -18,16 +18,20 @@ green: small circles that fits in the corner concaveture
 ## Install
 
 ## Usage
-The Rgrains has two versions: CUI and GUI. Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated "rcalculator". The usage of each version is as follows.
+The Rgrains has two versions: CUI and GUI. Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated core process of "rcalculator". The usage of each version is as follows.
 
 ### CUI version
+Rgains is encapsulated by object-oriented. The simple usage is shown in the example code in the link below. Below is an explanation of this example.
 
 [simple_example.m](https://github.com/keitaroyamada/Rgrains/blob/5f6a46785e832ffa46798b60db9925339448d1b3/Simple_example.m)
 
 #### 1. make Rgrains instance
+First, it must be create Rgrains instance, because Rgrains is encapsulated.Creating an instance of MATLAB is simple as follows
 
+```
 %make instance
 rgrains = rcalculator();
+```
 
 #### 2. load target image
 %load image
