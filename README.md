@@ -35,10 +35,13 @@ orange: corner convex curve
 green: small circles that fits in the corner concaveture
 
 #### 2.2.2. Calculation
-Rgrains calculates "Roundness" using the modified (program)[https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation] of [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192). See link for details. Briefly, the critical process is divided into three parts:  
+Rgrains calculates "Roundness" using the modified [program](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation) of [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192). See link for details. Briefly, the critical process is divided into three parts:  
 1. detecting counters
+   The program uses the particle's centre of gravity to convert the contour to polar coordinates. Coordinate-transformed contours are discrete because they are based on pixels of the image. Thus, the program uses matlab's built-in function of "[smooth](https://jp.mathworks.com/help/curvefit/smooth.html)" with lowess method to smooth discrete contours. In this process, the program uses a parameter called *"trace_precision"* in Rgrains to adjust the fitting.
 2. detecting convex curve
+   The program extracts only convex curves from smooth contours using a parameter called *"corner_sensitivity"* in Rgrains.
 3. fitting small circles
+   
 
 
 ## 4. Requirements (test emvironments)
