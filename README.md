@@ -54,19 +54,19 @@ title('Input image')
 
 #### 3. binarise
 Rgains requires binarisation to measure particle shape. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default settings, but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using "opts_binarise". The binarised image is stored in "im_bw" property. The supported options are as follows.
-##### 'upconvert' ["true", "false" (default: "true")] (heavy option)
+##### - 'upconvert' ["true", "false" (default: "true")] (heavy option)
 To reduce the effects of image jaggies, Rgrains stretch(x2) and interpolate the image by using "[imresize](https://jp.mathworks.com/help/matlab/ref/imresize.html)" This process is not always necessary.
-##### 'particle_color' ["Dark", "Bright" (default: "Dark")]
+##### - 'particle_color' ["Dark", "Bright" (default: "Dark")]
 Specifies the relative brightness of particles in the image to distinguish between background and particles.
-##### 'method' ['Adaptive', 'Otsu' (default: "Adaptive")]
+##### - 'method' ['Adaptive', 'Otsu' (default: "Adaptive")]
 Specifies the binarisation method. See link for more information.
 [imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
-##### 'adaptive_sensitivity', [0-1 (default: 0.35)]
+##### - 'adaptive_sensitivity', [0-1 (default: 0.35)]
 Specifies the binarisation threshold. See link for more information.
 [imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
-##### 'noise_thresholds'[0-Inf (default: [490 Inf])] ($pix^2$)
+##### - 'noise_thresholds'[0-Inf (default: [490 Inf])] ($pix^2$)
 Specify the size of particles to be detected by using lower and upper area($pix^2$) limits.
-##### 'ignore_particles_on_borders' ["true", "false" (default: "true")]
+##### - 'ignore_particles_on_borders' ["true", "false" (default: "true")]
 Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
 
 ```
@@ -93,21 +93,21 @@ subplot(1,2,2)
 ```
 
 #### 4. calculate roundness and other properties
-Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)).
+Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
 
 The supported options are as follows.
-##### 'trace_precision' [0-1 (default: 0.0600)] 
+##### - 'trace_precision' [0-1 (default: 0.0600)] 
 Parameters required to make a discrete edge composed of pixels a smooth function. See link for more information.
 [smooth](https://jp.mathworks.com/help/curvefit/smooth.html#mw_7695cbca-640d-4029-a239-81c9dd8192d0)
-##### 'corner_sensitivity' [0-1 (default: 0.0170)]
+##### - 'corner_sensitivity' [0-1 (default: 0.0170)]
 Sensitivity to detect convex corners from smooth contours.
-##### 'circle_precision' [0-1 (default: 0.9960)]
+##### - 'circle_precision' [0-1 (default: 0.9960)]
 Fitting accuracy of the small circle that fits the detected convex corner.
-##### 'image_scale' [0-Inf (default: 340)] ($pix/cm$)
+##### - 'image_scale' [0-Inf (default: 340)] ($pix/cm$)
 Rgrains returns results with dimensions such as area($cm^2$) and major axis($cm$) as well as dimensionless such as Roundness and aspect ratio. To give these results an actual length, it is necessary to give how many pixels 1 cm is.
-##### 'PCD_normarisation'["true", "false" (default: "true")]
+##### - 'PCD_normarisation'["true", "false" (default: "true")]
 Too large a difference in particle size can affect calculation performance and results. To avoid this effect, normalise the particle image size using the particle's circumscribed circle diameter. This can be expected to improve fitting of small particles and speed up the process for large particles.
-##### 'PCD_size' [0-Inf (default: 200)]($pix$)
+##### - 'PCD_size' [0-Inf (default: 200)] ($pix$)
 The circumscribed circle diameter to be normalised. It is recommended to use a value of at least 200pix for the diameter of the circumscribed circle.
 
 ```
@@ -126,7 +126,26 @@ close(f)
 ```
 
 #### 5. show the calculation results
+The calculated results are stored in "rprops" property but no direct access is required to view and export the results. To get the general results, please use "makeResultImage", "makeResultTable"  and "makeSummaryImage" methods. 
 
+##### "makeResultImage"
+Draws an extracted edges or fitted circle on the image. The supported options are as follows.
+##### - 'base_image' ["original", "bw", (default: "original")]
+Base image to be drawn.
+##### - 'colour_smoothed_particle_boundaries' [(default: 'green')]
+Colour of smoothed particle boundaries. The supported options are as follows.
+[plot_colours](https://jp.mathworks.com/help/matlab/creating_plots/specify-plot-colors.html)
+##### - 'colour_max_inscribed_circle' [(default: 'red')]
+Colour of the maximum inscribed circle.
+##### - 'colour_corner_circles' [(default: 'cyan')] 
+Colour of corner small circles.
+##### - 'plot_info' ['Particlenumber', 'Roundness' (default: 'Particlenumber')] 
+Information to be drawn on the image.
+##### - 'colour_info_text' [(default: 'magenta')]
+Colour of information text.
+##### - 'font', 'Arial',...
+Font of information text. The supported options are as follows.
+[Fonts](https://jp.mathworks.com/help/matlab/ref/listfonts.html)
 
 ```
 %show results
@@ -139,13 +158,22 @@ rgrains.opts_plot = struct ('base_image','original',...
                             'plot_info', 'Particlenumber');
 
 figure
-rgrains.makeResultImage(gca)
+rgrains.makeResultImage(gca);
+```
 
+##### "makeResultTable"
+Make table of results.
+```
 %make results table
-results = rgrains.makeResultTable();
+results_table = rgrains.makeResultTable();
+```
 
+##### "makeSummaryImage"
+Draws an statistics information of results, such as histograms.
+```
 %make summary
 SS = get(0, 'ScreenSize');
+
 figure('visible','on','Position',[SS(1) SS(2) SS(3) SS(4)]);
 rgrains.makeSummaryImage(gca)
 ```
