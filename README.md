@@ -230,7 +230,8 @@ rgrains.opts_export = struct('save_bw_image',true,...
                          'save_settings',true);
 
 %export results
-rgrains.export('save directory path')
+[save_dir] =uigetdir();
+rgrains.export(save_dir)
 ```
 
 ### 6.2. GUI version
