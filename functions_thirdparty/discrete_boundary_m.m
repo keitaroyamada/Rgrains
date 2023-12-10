@@ -21,7 +21,7 @@ function obj = discrete_boundary_m(cc)
         
         % conver the cartesian coordinates to polar coordinates
         
-        [ro, phi] = mycarte2polar(X, Y, ctd, 2);
+        [ro, phi] = carte2polar_m(X, Y, ctd, 2);
         obj.objects(k).polar = [phi, ro];
         obj.objects(k).centroid = s(k).Centroid;
         obj.objects(k).orientation = s(k).Orientation;

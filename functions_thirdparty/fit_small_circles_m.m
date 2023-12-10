@@ -9,7 +9,7 @@ function [z, r, range] = fit_small_circles_m(sz, pixel_list, convex, boundary_po
     lp =length(cv);
     
     while lp >= fp+minPoints
-        [zc, rc] = fitcircle(cv(fp:lp, :)');
+        [zc, rc] = fitcircle_m(cv(fp:lp, :)');
         
         min_dis = min(euclidian_distance_m(boundary_points, ones(size(boundary_points, 1),1)*zc'));
         if lp > fp+minPoints&&(min_dis < factor*rc||rc >= R||...

@@ -250,7 +250,7 @@ classdef rcalculator < handle
 
                 roi       = world_particle_props.objects(i).bbox;
                 roi       = [round(roi(1)-2), round(roi(2)-2), round(roi(3)+4), round(roi(4)+4)];%expanding
-                im_trimed = imROI(im_masked, roi, 0);%trimed image
+                im_trimed = imROI_m(im_masked, roi, 0);%trimed image
                 rprops(i).ROI = roi;
 
                 %scaling image resolution 
@@ -325,7 +325,7 @@ classdef rcalculator < handle
                 seglist = segment_boundary_m(X, Y, obj.opts_roundness.corner_sensitivity, 0);
 
                 %detection of concave and convex
-                [concave, convex] = concave_convex(seglist, [cx, cy], 0);
+                [concave, convex] = concave_convex_m(seglist, [cx, cy], 0);
 
                 %estimate Circumscribed small circles
                 minpoints = 3;%def:3
@@ -356,11 +356,11 @@ classdef rcalculator < handle
                 %progress bar
                 if isempty(ax)==false
                     d.Value = (i / world_cc.NumObjects);
-                    RT = HMS((world_cc.NumObjects-i) * (toc/i));
+                    RT = HMS_m((world_cc.NumObjects-i) * (toc/i));
                     d.Title = strcat('Calculating roundness(remaining time:',num2str(RT(1)),'h',num2str(RT(2)),'m',num2str(round(RT(3))),'s)');
                     d.Message = strcat('[',num2str(i),'/',num2str(world_cc.NumObjects),']: Calculating...',num2str(round(i / world_cc.NumObjects*100,1)),'%');
                 end
-                textprogress( i, world_cc.NumObjects, obj.im_name)
+                textprogress_m( i, world_cc.NumObjects, obj.im_name)
             end
 
             obj.rprops = rprops;

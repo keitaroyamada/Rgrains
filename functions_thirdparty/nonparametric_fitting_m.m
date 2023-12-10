@@ -6,7 +6,7 @@ function obj = nonparametric_fitting_m(obj, span)
     ctd = obj.objects(k).centroid;
     
     ro_mean = smooth(phi,ro,span,'loess');
-    [X, Y] = mypolar2carte(ro_mean, phi, ctd, 2);
+    [X, Y] = polar2carte_m(ro_mean, phi, ctd, 2);
     
     X(end) = X(1);
     Y(end) = Y(1);

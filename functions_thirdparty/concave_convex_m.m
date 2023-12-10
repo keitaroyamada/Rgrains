@@ -22,8 +22,8 @@ for i = 1:size(seglist2, 1)-2
 %              plot(inset(2), inset(1),'c*','LineWidth', 3); %plot order is (x y)
     
     %
-    d2Ct = euclidian_distance([x2, y2], [cx, cy]);% distance from point 2 to center
-    dInter2Ct = euclidian_distance([inset(2), inset(1)], [cx, cy]); %distance from intersection to center
+    d2Ct = euclidian_distance_m([x2, y2], [cx, cy]);% distance from point 2 to center
+    dInter2Ct = euclidian_distance_m([inset(2), inset(1)], [cx, cy]); %distance from intersection to center
     %          d2Ct = sqrt((x2 - cx)^2 + (y2 - cy)^2); % distance from point 2 to center
     %          dInterCt = sqrt((inset(2) - cx)^2 + (inset(1) - cy)^2); %distance from intersection to center
     

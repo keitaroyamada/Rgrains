@@ -8,12 +8,12 @@ function seglist = segment_boundary_m(X, Y, tolerance, display)
     seglist(Npts,:) = [X(fst) Y(fst)];
     
     while  fst<lst
-        [m,i] = maxlinedev(X(fst:lst),Y(fst:lst));  % Find size & posn of
+        [m,i] = maxlinedev_m(X(fst:lst),Y(fst:lst));  % Find size & posn of
         % maximum deviation.
         
         while m > tolerance       % While deviation is > tol
             lst = i+fst-1;  % Shorten line to point of max deviation by adjusting lst
-            [m,i] = maxlinedev(X(fst:lst),Y(fst:lst));
+            [m,i] = maxlinedev_m(X(fst:lst),Y(fst:lst));
         end
         
         Npts = Npts+1;
