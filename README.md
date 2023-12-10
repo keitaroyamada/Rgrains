@@ -1,6 +1,7 @@
 # Rgrains
+## 1. Introduction
 
-## Roundness definition
+## 2. Roundness definition
 The roundness is one of the useful parameters for grain shapes. The definition is extremely simple as below.
 
 $$Roundness = \left({1 \over n} \sum_{k=1}^n r_k \right)/R_{max}$$
@@ -15,42 +16,42 @@ orange: corner concaveture
 
 green: small circles that fits in the corner concaveture
 
-## Methods
+## 3. Methods
 
-## Requirements
-### CUI version and GUI version (matlab app)
+## 4. Requirements
+### 4.1. CUI version and GUI version (matlab app)
 - Matlab > 9.13 
 - Image processing toolbox > 11.6
 - Curve Fitting Toolbox > 3.8
 - Statistics and Machine Learning Toolbox > 12.4
 
-### GUI version (executable file) 
+### 4.2. GUI version (executable file) 
 - Windows 10, 11
 
 
-## Install
+## 5. Install
 The Rgrains has three versions: CUI and GUI(exective format and matapp format).
-### CUI version
+### 5.1. CUI version
 1. Download all files in this repository
 2. After unzipped, add downloaded repository to the matlab path. 
 
-### GUI version (matlab app)
+### 5.2. GUI version (matlab app)
 1. Download installer file from releases.
 2. Install from "Apps" tab in the Matlab.
 
-### GUI version (executable file)
+### 5.3. GUI version (executable file)
 1. Download the executable file from Releases.
 2. Follow the wizard to install.
 
-## Usage
+## 6. Usage
 The Rgrains has three versions: CUI and GUI(exective format and matapp format). Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated core process of "rcalculator". The usage of each version is as follows.
 
-### CUI version
+### 6.1. CUI version
 Rgains is encapsulated by object-oriented. The simple usage is shown in the example code in the link below. Below is an explanation of this example.
 
 [simple_example.m](https://github.com/keitaroyamada/Rgrains/blob/5f6a46785e832ffa46798b60db9925339448d1b3/Simple_example.m)
 
-#### 1. make Rgrains instance
+#### 6.1.1. make Rgrains instance
 First, it must be create Rgrains instance, because Rgrains is encapsulated.Creating an instance of MATLAB is simple as follows
 
 ```
@@ -58,7 +59,7 @@ First, it must be create Rgrains instance, because Rgrains is encapsulated.Creat
 rgrains = rcalculator();
 ```
 
-#### 2. load target image
+#### 6.1.2. load target image
 Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "[imread](https://jp.mathworks.com/help/matlab/ref/imread.html)". See the link for supported formats.　If necessary, use "uigetfile" to obtain the image path. The loaded image is stored in "im_in" property.
 
 ```
@@ -74,7 +75,7 @@ imshow(rgrains.im_in)
 title('Input image')
 ```
 
-#### 3. binarise
+#### 6.1.3. binarise
 Rgains requires binarisation to measure particle shape. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default settings, but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using "opts_binarise". The binarised image is stored in "im_bw" property. The supported options are as follows.
 
 - *'upconvert'* ["true", "false" (default: "true")] (heavy option)  
@@ -115,7 +116,7 @@ subplot(1,2,2)
 
 ```
 
-#### 4. calculate roundness and other properties
+#### 6.1.4. calculate roundness and other properties
 Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
 
 The supported options are as follows.
@@ -148,10 +149,10 @@ rgrains.calcRoundness(f);
 close(f)
 ```
 
-#### 5. show the calculation results
+#### 6.1.5. show the calculation results
 The calculated results are stored in "rprops" property but no direct access is required to view and export the results. To get the general results, please use "makeResultImage", "makeResultTable"  and "makeSummaryImage" methods. 
 
-##### "makeResultImage"
+- *"makeResultImage"*  
 Draws an extracted edges or fitted circle on the image. The supported options are as follows.
 - *'base_image'* ["original", "bw", (default: "original")]  
 Base image to be drawn.
@@ -184,14 +185,14 @@ figure
 rgrains.makeResultImage(gca);
 ```
 
-##### "makeResultTable"
+- *"makeResultTable"*
 Make table of results.
 ```
 %make results table
 results_table = rgrains.makeResultTable();
 ```
 
-##### "makeSummaryImage"
+- *"makeSummaryImage"*
 Draws an statistics information of results, such as histograms.
 ```
 %make summary
@@ -201,7 +202,7 @@ figure('visible','on','Position',[SS(1) SS(2) SS(3) SS(4)]);
 rgrains.makeSummaryImage(gca)
 ```
 
-#### 6. export the results
+#### 6.1.6. export the results
 Writes the calculation results as files. The supported options are as follows.
 - *'save_bw_image'* ["true", "false", (default: "true")]  
 Save binarised image in jpeg.
@@ -232,12 +233,12 @@ rgrains.opts_export = struct('save_bw_image',true,...
 rgrains.export('save directory path')
 ```
 
-### GUI version
+### 6.2. GUI version
 
 
-## References
+## 7. References
 - [Wadell (1932) Volume, Shape, and Roundness of Rock Particles](https://www.journals.uchicago.edu/doi/10.1086/623964)
 - [Krumbein (1941) Measurement and geological significance of shape and roundness of sedimentary particles](https://pubs.geoscienceworld.org/sepm/jsedres/article-abstract/11/2/64/94958/Measurement-and-geological-significance-of-shape)
 - [ZHENG & HRYCIW (2015) Traditional soil particle sphericity, roundness and surface roughness by computational geometry](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)
   - [source code](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation)
-- [Ishimura & Yamada (2019) (https://www.nature.com/articles/s41598-019-46584-z](https://www.nature.com/articles/s41598-019-46584-z)
+- [Ishimura & Yamada (2019) Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://www.nature.com/articles/s41598-019-46584-z)
