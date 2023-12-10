@@ -17,8 +17,25 @@ green: small circles that fits in the corner concaveture
 
 ## Methods
 
+## Requirements
+### CUI version and GUI version (matlab app)
+
+### GUI version (executable file) 
+
+
 ## Install
 The Rgrains has three versions: CUI and GUI(exective format and matapp format).
+### CUI version
+1. Download all files in this repository
+2. After unzipped, add downloaded repository to the matlab path. 
+
+### GUI version (matlab app)
+1. Download installer file from releases.
+2. Install from "Apps" tab in the Matlab.
+
+### GUI version (executable file)
+1. Download the executable file from Releases.
+2. Follow the wizard to install.
 
 ## Usage
 The Rgrains has three versions: CUI and GUI(exective format and matapp format). Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated core process of "rcalculator". The usage of each version is as follows.
