@@ -64,7 +64,7 @@ Specifies the binarisation method. See link for more information.
 ##### 'adaptive_sensitivity', [0-1 (default: 0.35)]
 Specifies the binarisation threshold. See link for more information.
 [imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
-##### 'noise_thresholds'[0-Inf (default: [490 Inf])]
+##### 'noise_thresholds'[0-Inf (default: [490 Inf])] ($pix^2$)
 Specify the size of particles to be detected by using lower and upper area($pix^2$) limits.
 ##### 'ignore_particles_on_borders' ["true", "false" (default: "true")]
 Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
@@ -93,14 +93,22 @@ subplot(1,2,2)
 ```
 
 #### 4. calculate roundness and other properties
-Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. The supported options are as follows.
-##### 'trace_precision' [0-1 (default: 0.0600)] 
+Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)).
 
+The supported options are as follows.
+##### 'trace_precision' [0-1 (default: 0.0600)] 
+Parameters required to make a discrete edge composed of pixels a smooth function. See link for more information.
+[smooth](https://jp.mathworks.com/help/curvefit/smooth.html#mw_7695cbca-640d-4029-a239-81c9dd8192d0)
 ##### 'corner_sensitivity' [0-1 (default: 0.0170)]
+Sensitivity to detect convex corners from smooth contours.
 ##### 'circle_precision' [0-1 (default: 0.9960)]
-##### 'image_scale' [0-Inf (default: 340)]
+Fitting accuracy of the small circle that fits the detected convex corner.
+##### 'image_scale' [0-Inf (default: 340)] ($pix/cm$)
+Rgrains returns results with dimensions such as area($cm^2$) and major axis($cm$) as well as dimensionless such as Roundness and aspect ratio. To give these results an actual length, it is necessary to give how many pixels 1 cm is.
 ##### 'PCD_normarisation'["true", "false" (default: "true")]
-##### 'PCD_size' [0-Inf (default: 200)]
+Too large a difference in particle size can affect calculation performance and results. To avoid this effect, normalise the particle image size using the particle's circumscribed circle diameter. This can be expected to improve fitting of small particles and speed up the process for large particles.
+##### 'PCD_size' [0-Inf (default: 200)]($pix$)
+The circumscribed circle diameter to be normalised. It is recommended to use a value of at least 200pix for the diameter of the circumscribed circle.
 
 ```
 %calculate roundness 
@@ -117,6 +125,10 @@ rgrains.calcRoundness(f);
 close(f)
 ```
 
+#### 5. show the calculation results
+
+
+```
 %show results
 rgrains.opts_plot = struct ('base_image','original',...
                             'colour_smoothed_particle_boundaries','green',...
@@ -136,7 +148,9 @@ results = rgrains.makeResultTable();
 SS = get(0, 'ScreenSize');
 figure('visible','on','Position',[SS(1) SS(2) SS(3) SS(4)]);
 rgrains.makeSummaryImage(gca)
+```
 
+#### 6. export the results
 %export results
 rgrains.opts_export = struct('save_bw_image',true,...
                          'save_fitted_image_with_No',true,...
