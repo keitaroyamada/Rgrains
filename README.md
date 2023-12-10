@@ -34,11 +34,22 @@ rgrains = rcalculator();
 ```
 
 #### 2. load target image
+Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "imread". See the link below for supported formats.　If necessary, use "uigetfile" to obtain the image path.
+
+[imread](https://jp.mathworks.com/help/matlab/ref/imread.html)
+
+```
+% get image path
+[im_name, im_dir] = uigetfile();
+
 %load image
-rgrains.loadImage('image full path')
+rgrains.loadImage(fullfile(im_dir, im_name));
+
+%show loaded image
 figure
 imshow(rgrains.im_in)
 title('Input image')
+```
 
 #### 3. binarise
 R binarizes the image. Binarization depends on GG. Binarization is performed adaptively by GG by default, but depending on the contrast of the image, it may not reproduce the exact particle contours. You should always check the binarized image for the best settings for each image. Binarization is controlled using opts_binarise.
