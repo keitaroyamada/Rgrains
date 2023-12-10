@@ -34,7 +34,7 @@ rgrains = rcalculator();
 ```
 
 #### 2. load target image
-Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "imread". See the link below for supported formats.　If necessary, use "uigetfile" to obtain the image path.
+Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "imread". See the link below for supported formats.　If necessary, use "uigetfile" to obtain the image path. The loaded image is stored in "im_in" property.
 
 [imread](https://jp.mathworks.com/help/matlab/ref/imread.html)
 
@@ -52,17 +52,21 @@ title('Input image')
 ```
 
 #### 3. binarise
-R binarizes the image. Binarization depends on GG. Binarization is performed adaptively by GG by default, but depending on the contrast of the image, it may not reproduce the exact particle contours. You should always check the binarized image for the best settings for each image. Binarization is controlled using opts_binarise.
+Rgains requires binarisation to measure particle shape. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default settings, but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using "opts_binarise".
 
-
-%binarise image
+```
+% set binarisation options
 rgrains.opts_binarise = struct('upconvert', true,...
                                'particle_color', 'Dark',...
                                'method', 'Otsu',...%['Adaptive', 'Otsu']
                                'adaptive_sensitivity', 0.35,...
                                'noise_thresholds', [490 Inf],...
                                'ignore_particles_on_borders', true);
+
+% apply binarisation
 rgrains.binariseImage();
+
+% shwo binarise results
 figure
 subplot(1,2,1)
     imshow(rgrains.im_in)
@@ -70,6 +74,8 @@ subplot(1,2,1)
 subplot(1,2,2)
     imshow(rgrains.im_bw)
     title('Binarised image')
+
+```
 
 %calculate roundness 
 rgrains.opts_roundness = struct('trace_precision', 0.0600,...
