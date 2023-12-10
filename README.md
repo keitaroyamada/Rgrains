@@ -234,3 +234,8 @@ rgrains.export('save directory path')
 
 ### GUI version
 
+
+## References
+- [ZHENG & HRYCIW (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)
+  - [source code](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation)
+- [Ishimura & Yamada (2019)](https://www.nature.com/articles/s41598-019-46584-z)
