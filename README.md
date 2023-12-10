@@ -39,8 +39,9 @@ Rgrains calculates "Roundness" using the modified [program](https://jp.mathworks
 1. detecting counters
    The program uses the particle's centre of gravity to convert the contour to polar coordinates. Coordinate-transformed contours are discrete because they are based on pixels of the image. Thus, the program uses matlab's built-in function of "[smooth](https://jp.mathworks.com/help/curvefit/smooth.html)" with lowess method to smooth discrete contours. In this process, the program uses a parameter called *"trace_precision"* in Rgrains to adjust the fitting.
 2. detecting convex curve
-   The program extracts only convex curves from smooth contours using a parameter called *"corner_sensitivity"* in Rgrains.
-3. fitting small circles
+   The program extracts only convex curves from smooth contours using a parameter called *"corner_sensitivity"* in Rgrains. This parameter represents the maximum allowable distance between the arc of the curve and its corresponding chord. It determines the number of straight-line segments required to approximate the curve with sufficient accuracy.
+4. fitting small circles
+   The best-fit circle for particle corners is determined by minimising the sum of squares of distances from the points to the circle. The circle's suitability is then assessed by comparing its radius with the minimum distance from the circle's centre to the particle boundary, using a threshold value called *"circle_precision"* in Rgrains to ensure accuracy.
    
 
 
