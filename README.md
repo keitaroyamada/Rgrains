@@ -52,7 +52,21 @@ title('Input image')
 ```
 
 #### 3. binarise
-Rgains requires binarisation to measure particle shape. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default settings, but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using "opts_binarise".
+Rgains requires binarisation to measure particle shape. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default settings, but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using "opts_binarise". The binarised image is stored in "im_bw" property. The supported options are as follows.
+##### 'upconvert' ["true", "false" (default: "true")] (heavy option)
+To reduce the effects of image jaggies, Rgrains stretch(x2) and interpolate the image by using "[imresize](https://jp.mathworks.com/help/matlab/ref/imresize.html)" This process is not always necessary.
+##### 'particle_color' ["Dark", "Bright" (default: "Dark")]
+Specifies the relative brightness of particles in the image to distinguish between background and particles.
+##### 'method' ['Adaptive', 'Otsu' (default: "Adaptive")]
+Specifies the binarisation method. See link for more information.
+[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
+##### 'adaptive_sensitivity', [0-1 (default: 0.35)]
+Specifies the binarisation threshold. See link for more information.
+[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)
+##### 'noise_thresholds'[0-Inf (default: [490 Inf])]
+Specify the size of particles to be detected by using lower and upper area($pix^2$) limits.
+##### 'ignore_particles_on_borders' ["true", "false" (default: "true")]
+Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
 
 ```
 % set binarisation options
@@ -77,6 +91,7 @@ subplot(1,2,2)
 
 ```
 
+#### 4. calculate roundness and other properties
 %calculate roundness 
 rgrains.opts_roundness = struct('trace_precision', 0.0600,...
                                 'corner_sensitivity', 0.0170,...
