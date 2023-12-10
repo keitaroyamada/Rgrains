@@ -1,6 +1,6 @@
 # Rgrains
 
-## Definition
+## Roundness definition
 The roundness is one of the useful parameters for grain shapes. The definition is extremely simple as below.
 
 $$Roundness = \left({1 \over n} \sum_{k=1}^n r_k \right)/R_{max}$$
@@ -19,8 +19,13 @@ green: small circles that fits in the corner concaveture
 
 ## Requirements
 ### CUI version and GUI version (matlab app)
+- Matlab > 9.13 
+- Image processing toolbox > 11.6
+- Curve Fitting Toolbox > 3.8
+- Statistics and Machine Learning Toolbox > 12.4
 
 ### GUI version (executable file) 
+- Windows 10, 11
 
 
 ## Install
