@@ -15,10 +15,13 @@ orange: corner concaveture
 
 green: small circles that fits in the corner concaveture
 
+## Methods
+
 ## Install
+The Rgrains has three versions: CUI and GUI(exective format and matapp format).
 
 ## Usage
-The Rgrains has two versions: CUI and GUI. Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated core process of "rcalculator". The usage of each version is as follows.
+The Rgrains has three versions: CUI and GUI(exective format and matapp format). Rgains is encapsulated by object-oriented. Both versions depend on this encapsulated core process of "rcalculator". The usage of each version is as follows.
 
 ### CUI version
 Rgains is encapsulated by object-oriented. The simple usage is shown in the example code in the link below. Below is an explanation of this example.
@@ -34,9 +37,7 @@ rgrains = rcalculator();
 ```
 
 #### 2. load target image
-Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "imread". See the link below for supported formats.　If necessary, use "uigetfile" to obtain the image path. The loaded image is stored in "im_in" property.
-
-[imread](https://jp.mathworks.com/help/matlab/ref/imread.html)
+Next, load the target image to be analysed. Loading images into Rgrains is simple, just use "loadImage" method to specify the path to the image. The supported image formats are not restricted by Rgrains itself, but depend on MATLAB function of "[imread](https://jp.mathworks.com/help/matlab/ref/imread.html)". See the link for supported formats.　If necessary, use "uigetfile" to obtain the image path. The loaded image is stored in "im_in" property.
 
 ```
 % get image path
@@ -92,6 +93,16 @@ subplot(1,2,2)
 ```
 
 #### 4. calculate roundness and other properties
+Roundness is calculated from the binarised image. See [Definituion](#Definituion) and [Methods](#Methods) for calculation detail methods and reference. The supported options are as follows.
+##### 'trace_precision' [0-1 (default: 0.0600)] 
+
+##### 'corner_sensitivity' [0-1 (default: 0.0170)]
+##### 'circle_precision' [0-1 (default: 0.9960)]
+##### 'image_scale' [0-Inf (default: 340)]
+##### 'PCD_normarisation'["true", "false" (default: "true")]
+##### 'PCD_size' [0-Inf (default: 200)]
+
+```
 %calculate roundness 
 rgrains.opts_roundness = struct('trace_precision', 0.0600,...
                                 'corner_sensitivity', 0.0170,...
@@ -99,9 +110,12 @@ rgrains.opts_roundness = struct('trace_precision', 0.0600,...
                                 'image_scale', 340,...
                                 'PCD_normarisation', true,...
                                 'PCD_size', 200);
+
+%with showing progressbar
 f = uifigure();
-rgrains.calcRoundness(f);%with showing progressbar
+rgrains.calcRoundness(f);
 close(f)
+```
 
 %show results
 rgrains.opts_plot = struct ('base_image','original',...
