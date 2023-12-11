@@ -4,6 +4,8 @@ This repository incorporates material as listed below or described in the code.
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
+Roundness calculation program
+
 Copyright (c) 2016, Junxing Zheng
 All rights reserved.
 
