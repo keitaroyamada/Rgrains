@@ -4,13 +4,13 @@
 ## 1. Introduction
 The shape of particles is one of the essential pieces of information for understanding their characteristics. It is utilised in various fields, such as powder engineering and sedimentology. Because the shape and size of a particle are strongly related to its behaviour and their history, these are treated as crucial information in sedimentology.　　
 
-There have been attempts to quantitatively express the shape of particles since old days. Particularly famous is the "Roundness" defined by Wadell (1932). "Roundness" is a ratio calculated by dividing the average diameter of the small circles that touch the convex parts of a particle's contour by the diameter of the largest inscribed circle, and it is represented in a range of 0-1. Since "Roundness" uses the average of small circles, it is a relatively robust indicator. It focuses on convex parts, making it more sensitive to shape changes than indices calculated from the entire shape of the particle, like "Circularity." Hence, “Roundness” provides valuable information for identifying sediment particles and considering their processes.
+There have been attempts to quantitatively express the shape of particles since old days. Particularly famous is the "Roundness" defined by [Wadell (1932)](https://www.journals.uchicago.edu/doi/10.1086/623964). "Roundness" is a ratio calculated by dividing the average diameter of the small circles that touch the convex parts of a particle's contour by the diameter of the largest inscribed circle, and it is represented in a range of 0-1. Since "Roundness" uses the average of small circles, it is a relatively robust indicator. It focuses on convex parts, making it more sensitive to shape changes than indices calculated from the entire shape of the particle, like "Circularity." Hence, “Roundness” provides valuable information for identifying sediment particles and considering their processes.
 
-However, measuring the "Roundness" of natural particles with complex shapes is difficult and time-consuming. In the era before digital cameras and computers, it was common to use impression diagrams proposed by Krumbein (1941) for semi-quantitative measurements. This diagram added a degree of objectivity to the previously subjective particle shapes, enabling comparative analysis and significantly expanding the field of research. This played a significant role in their time, but they were not entirely objective and did not fully represent the continuous nature of "Roundness."
+However, measuring the "Roundness" of natural particles with complex shapes is difficult and time-consuming. In the era before digital cameras and computers, it was common to use impression diagrams proposed by [Krumbein (1941)](https://pubs.geoscienceworld.org/sepm/jsedres/article-abstract/11/2/64/94958/Measurement-and-geological-significance-of-shape) for semi-quantitative measurements. This diagram added a degree of objectivity to the previously subjective particle shapes, enabling comparative analysis and significantly expanding the field of research. This played a significant role in their time, but they were not entirely objective and did not fully represent the continuous nature of "Roundness."
 
-Recently, with the advancement of digital technologies like cameras and computers, it has become possible to measure various shapes, including the theoretical "Roundness" defined by Wadell, more objectively and quickly. For example, Zheng & Hryciw (2015) succeeded in calculating "Roundness" by fitting small circles to the contours of particles in images. Furthermore, Fukuda & Naruse (2020) succeeded in quantifying shapes by applying Elliptic Fourier Analysis to the contours of particles in images. Thus, with the evolution of digital technologies, particle shape analysis has achieved unprecedented levels of precision and speed.
+Recently, with the advancement of digital technologies like cameras and computers, it has become possible to measure various shapes, including the theoretical "Roundness" defined by Wadell, more objectively and quickly. For example, [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192) succeeded in calculating "Roundness" by fitting small circles to the contours of particles in images. Furthermore, [Fukuda & Naruse (2020)](https://doi.org/10.2110/jsr.2020.67) succeeded in quantifying shapes by applying Elliptic Fourier Analysis to the contours of particles in images. Thus, with the evolution of digital technologies, particle shape analysis has achieved unprecedented levels of precision and speed.
 
-Rgrains is an image analysis software equipped with a series of functions for extracting contours from images, measuring shapes, and outputting results as images or tables. Rgrains can calculate the area, circularity, major and minor axis lengths of particles. Furthermore, this software, drawing upon Zheng & Hryciw's (2015) innovative techniques, can also calculate "Roundness" according to Wadell's definition. In a way, it can be considered a wrapper software for Zheng & Hryciw (2015)'s program. Ishimura & Yamada (2019) used Rgrains to analyse the shapes of gravel in tsunami deposits, estimating the magnitude of past tsunamis based on the similarity between terrain and particle shapes. In this way, Rgrains equips researchers with a nuanced understanding of particle dynamics, facilitating a deeper exploration of particle behaviour. We sincerely hope that this application, Rgrains, will significantly expand the horizons of scientific inquiry, opening new avenues for research and fostering a deeper, more comprehensive understanding in the field.
+Rgrains is an image analysis software equipped with a series of functions for extracting contours from images, measuring shapes, and outputting results as images or tables. Rgrains can calculate the area, circularity, major and minor axis lengths of particles. Furthermore, this software, drawing upon [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)'s innovative techniques, can also calculate "Roundness" according to Wadell's definition. In a way, it can be considered a wrapper software for [Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)'s program. [Ishimura & Yamada (2019)](https://www.nature.com/articles/s41598-019-46584-z) used Rgrains to analyse the shapes of gravel in tsunami deposits, estimating the magnitude of past tsunamis based on the similarity between terrain and particle shapes. In this way, Rgrains equips researchers with a nuanced understanding of particle dynamics, facilitating a deeper exploration of particle behaviour. We sincerely hope that this application, Rgrains, will significantly expand the horizons of scientific inquiry, opening new avenues for research and fostering a deeper, more comprehensive understanding in the field.
 
 ---
 ## 2. Methods of measuremnt and calculation
@@ -184,6 +184,7 @@ The circumscribed circle diameter to be normalised. It is recommended to use a v
 #### 5.1.5. show the calculation results
 The calculated results are stored in "rprops" property but no direct access is required to view and export the results. To get the general results, please use "makeResultImage", "makeResultTable"  and "makeSummaryImage" methods. 
 
+__*"makeResultImage"*__
 ```
 %show results
 rgrains.opts_plot = struct ('base_image','original',...
@@ -200,34 +201,34 @@ rgrains.makeResultImage(gca);
 <img src="test_data/results/test1_fitted_No.jpg" width="500" >
 
 The supported options are as follows.
-   - *"makeResultImage"*  
+- *"makeResultImage"*  
 Draws an extracted edges or fitted circle on the image. The supported options are as follows.
-   - *'base_image'* ["original", "bw", (default: "original")]  
+- *'base_image'* ["original", "bw", (default: "original")]  
 Base image to be drawn.
-   - *'colour_smoothed_particle_boundaries'* [(default: 'green')]  
+- *'colour_smoothed_particle_boundaries'* [(default: 'green')]  
 Colour of smoothed particle boundaries. The supported options are as follows.
 [plot_colours](https://jp.mathworks.com/help/matlab/creating_plots/specify-plot-colors.html)
-   - *'colour_max_inscribed_circle'* [(default: 'red')]  
+- *'colour_max_inscribed_circle'* [(default: 'red')]  
 Colour of the maximum inscribed circle.
-   - *'colour_corner_circles'* [(default: 'cyan')]  
+- *'colour_corner_circles'* [(default: 'cyan')]  
 Colour of corner small circles.
-   - *'plot_info'* ['Particlenumber', 'Roundness' (default: 'Particlenumber')]  
+- *'plot_info'* ['Particlenumber', 'Roundness' (default: 'Particlenumber')]  
 Information to be drawn on the image.
-   - *'colour_info_text'* [(default: 'magenta')]  
+- *'colour_info_text'* [(default: 'magenta')]  
 Colour of information text.
-   - *'font'* [(default: 'Arial')]  
+- *'font'* [(default: 'Arial')]  
 Font of information text. The supported options are as follows.
 [Fonts](https://jp.mathworks.com/help/matlab/ref/listfonts.html)
 
-- *"makeResultTable"*
+__*"makeResultTable"*__  
 Make table of results.
 ```
 %make results table
 results_table = rgrains.makeResultTable();
 ```
-<img src="test_data/results/test1_fitted_No.jpg" width="500" >
+<img src="test_data/results/test1_results.png" width="500" >
 
-- *"makeSummaryImage"*
+__*"makeSummaryImage"*__  
 Draws an statistics information of results, such as histograms.
 ```
 %make summary
@@ -351,3 +352,4 @@ Click the '[Batch > Run from folder]' button to initiate the batch process. Duri
   - [source code](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation)
 - [Ishimura & Yamada (2019) Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://www.nature.com/articles/s41598-019-46584-z)
 - [Fukuda & Naruse (2020) Shape difference of mud clasts depending on depositional facies: application of newly modified elliptic Fourier analysis to hybrid event beds](https://doi.org/10.2110/jsr.2020.67)
+---
