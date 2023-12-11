@@ -1,4 +1,6 @@
 # Rgrains
+![Rgrains](docs/binarised.png)
+
 ## 1. Introduction
 The shape of particles is one of the essential pieces of information for understanding their characteristics. It is utilised in various fields, such as powder engineering and sedimentology. Because the shape and size of a particle are strongly related to its behaviour and their history, these are treated as crucial information in sedimentology.　　
 
@@ -262,11 +264,14 @@ rgrains.export(save_dir)
 ```
 
 ### 6.2. GUI version
+
 #### 6.2.0. Save/Load settings
 All settings for Rgrains can be saved from [File > Save settings]. The setting file is saved with the extension ".rgrains". Saved setting file (.rgrains) can be loaded from [file > Load settings] to restore previous settings.
 
 #### 6.2.1. Load image
 Images can be loaded from the load button at the top. Pressing the load button activates the file chooser, which allows you to select an image with the specified extension (e.g. jpg). The specified extension can be changed from [settings > Acquisition > image type].
+
+![load](docs/original.png)
 
 #### 6.2.2. Binarise image
 Rgains requires binarisation to measure particle shape. Pressing the Binarise button to start binarisation. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default setting of "Adaptive", but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using  options.
@@ -288,6 +293,8 @@ To reduce the effects of image jaggies, Rgrains stretch(x2) and interpolate the 
 - *'Settings > Binarisation > ignore particles on borders'* ["true", "false" (default: "false")]  
 Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
 
+![binarised](docs/binarised.png)
+
 #### 6.2.3. Calculate Roundness
 Roundness is calculated from the binarised image. Press the Analysis button to start calculate roundness and other parameters. See Methods of measuremnt and calculation for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
 
@@ -303,6 +310,9 @@ Fitting accuracy of the small circle that fits the detected convex corner.
 Too large a difference in particle size can affect calculation performance and results. To avoid this effect, normalise the particle image size using the particle's circumscribed circle diameter. This can be expected to improve fitting of small particles and speed up the process for large particles.
 - *'PCD threshold'* [0-Inf (default: 200)] ($pix$)  
 The circumscribed circle diameter to be normalised. It is recommended to use a value of at least 200pix for the diameter of the circumscribed circle.
+
+![analysing](docs/analysing.png)
+
 
 #### 6.2.4. Export results
 To writes the calculation results as files, please press the "Export" button. The supported options are as follows.
@@ -320,6 +330,8 @@ Save statistical summary image in png.
 Save results table in csv.
 - *'Settings > Export > Save settings'* ["true", "false", (default: "false")]  
 Save calculation settings in csv.
+
+![analysed](docs/analysed.png)
 
 #### 6.2.5. Batch process
 Click the '[Batch > Run from folder]' button to initiate the batch process. During this process, you need to specify the 'Source Folder' that contains the images and the 'Save Folder' for saving the results. The Rgrains software will then process all images with a specified extension in the source folder, following the predefined settings.
