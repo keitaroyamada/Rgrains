@@ -56,6 +56,7 @@ Rgrains calculates "Roundness" using the modified [program](https://jp.mathworks
 ### 3.2. GUI version (executable file) 
 - Windows 10, 11 (Intel)
 - Mac Sonoma 14.1.1 (Apple M1)
+- Matlab Runtime (Rgrains includes this online installer)
 
 ---
 ## 4. Install
