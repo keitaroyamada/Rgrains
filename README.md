@@ -280,7 +280,7 @@ All settings for Rgrains can be saved from [File > Save settings]. The setting f
 #### 5.2.1. Load image
 Images can be loaded from the load button at the top. Pressing the load button activates the file chooser, which allows you to select an image with the specified extension (e.g. jpg). The specified extension can be changed from [settings > Acquisition > image type].
 
-![load](docs/original.png)
+<img src="docs/original.png" width="500" >
 
 #### 5.2.2. Binarise image
 Rgains requires binarisation to measure particle shape. Pressing the Binarise button to start binarisation. Binarisation depends on "[imbinarize](https://jp.mathworks.com/help/images/ref/imbinarize.html)". Binarisation is performed adaptively by imbinarize by default setting of "Adaptive", but depending on the contrast of the image, it may not reproduce the particle edges. You should always check the binarised image for the best settings for each image. Binarisation is able to be controlled using  options.
@@ -302,7 +302,7 @@ To reduce the effects of image jaggies, Rgrains stretch(x2) and interpolate the 
 - *'Settings > Binarisation > ignore particles on borders'* ["true", "false" (default: "false")]  
 Specifies whether to exclude particles that are located at the boundaries of the image from which the overall shape cannot be extracted.
 
-![binarised](docs/binarised.png)
+<img src="docs/binarised.png" width="500" >
 
 #### 5.2.3. Calculate Roundness
 Roundness is calculated from the binarised image. Press the Analysis button to start calculate roundness and other parameters. See Methods of measuremnt and calculation for calculation detail methods and reference. Particularly,trace_precision, corner_sensitivity and circle_precisio are critical parameters for culculating roundness of the paticles. Therefore, these parameters must be carefully determined using support tools ([RoundnessForAi](https://github.com/keitaroyamada/RoundnessForAI)). 
