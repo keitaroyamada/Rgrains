@@ -1,2 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<MATLABProject xmlns="http://www.mathworks.com/MATLABProjectFile" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"/>
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="1736505205" file="C:\Users\slinn\Dropbox\Matlab\github\Rgrains\Rgrains.prj" location="C:\Users\slinn\Dropbox\Matlab\github\Rgrains" name="Rgrains" target="target.mlapps" target-name="アプリのパッケージ化">
+    <param.appname>Rgrains</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot>C:\Users\slinn\AppData\Local\Temp\tpdbb7349c_63c5_4243_b870_dd87f0412f04.png</param.screenshot>
+    <param.version>5.0.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>094eae85-af98-493e-87c4-69060a245c19</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\Rgrains.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\functions\boundary_regionprops.m</file>
+      <file>${PROJECT_ROOT}\functions\HMS_m.m</file>
+      <file>${PROJECT_ROOT}\functions\imROI_m.m</file>
+      <file>${PROJECT_ROOT}\functions\rcalculator.m</file>
+      <file>${PROJECT_ROOT}\functions\textprogress_m.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\slinn\Dropbox\Matlab\github" name="Rgrains" optional="false">C:\Users\slinn\Dropbox\Matlab\github\Rgrains</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2022b</root>
+      <toolboxes>
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
