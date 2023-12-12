@@ -36,12 +36,12 @@ The Rgrains has three versions: CUI and GUI(exective format and matapp format).
 - Matlab Runtime (Rgrains includes this online installer)
 
 ---
-## 5. Usage
+## Usage
 The Rgrains has three versions: CUI and GUI(exective format and matapp format). 
 Instructions on how to use each version is available in the **[Rgrains Usage](https://github.com/keitaroyamada/Rgrains/wiki)**. 
 
 ---
-## 6. References
+## References
 - [Wadell (1932) Volume, Shape, and Roundness of Rock Particles](https://www.journals.uchicago.edu/doi/10.1086/623964)
 - [Krumbein (1941) Measurement and geological significance of shape and roundness of sedimentary particles](https://pubs.geoscienceworld.org/sepm/jsedres/article-abstract/11/2/64/94958/Measurement-and-geological-significance-of-shape)
 - [Zheng & Hryciw (2015) Traditional soil particle sphericity, roundness and surface roughness by computational geometry](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192)
