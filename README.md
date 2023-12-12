@@ -2,7 +2,7 @@
 ![Rgrains](docs/binarised.png)
 
 ## 1. Introduction
-The shape of particles is one of the essential pieces of information for understanding their characteristics. It is utilised in various fields, such as powder engineering and sedimentology. Because the shape and size of a particle are strongly related to its behaviour and their history, these are treated as crucial information in sedimentology.　　
+The shape of particles is one of the essential pieces of information for understanding their characteristics. It is utilised in various fields, such as powder engineering, sedimentology and etc. Because the shape and size of a particle are strongly related to its behaviour and their history, these are treated as crucial information in sedimentology.　　
 
 There have been attempts to quantitatively express the shape of particles since old days. Particularly famous is the "Roundness" defined by [Wadell (1932)](https://www.journals.uchicago.edu/doi/10.1086/623964). "Roundness" is a ratio calculated by dividing the average diameter of the small circles that touch the convex parts of a particle's contour by the diameter of the largest inscribed circle, and it is represented in a range of 0-1. Since "Roundness" uses the average of small circles, it is a relatively robust indicator. It focuses on convex parts, making it more sensitive to shape changes than indices calculated from the entire shape of the particle, like "Circularity." Hence, “Roundness” provides valuable information for identifying sediment particles and considering their processes.
 
