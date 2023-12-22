@@ -3,6 +3,12 @@ NOTICES
 This repository incorporates material as listed below or described in the code.
 
 ------------------------------------------------------------------------------
+This code is generated using the following:
+
+* MATLAB(R). (c) 1984 -2023
+* Image processing toolbox
+* Curve Fitting Toolbox
+* Statistics and Machine Learning
 ------------------------------------------------------------------------------
 Roundness calculation program
 
