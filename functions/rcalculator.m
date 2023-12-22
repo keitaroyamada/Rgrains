@@ -21,7 +21,7 @@ classdef rcalculator < handle
         function obj = rcalculator()
             %initiarise;
             obj.opts_rgrains = struct('version','Rgrains ver. 5.0.0 (2023 Nov 01)');
-            obj.opts_binarise = struct('upconvert',true,...
+            obj.opts_binarise = struct('upconvert',false,...
                                        'particle_color', 'Dark',...
                                        'method','Adaptive',...
                                        'adaptive_sensitivity',0.35,...
@@ -36,7 +36,7 @@ classdef rcalculator < handle
             obj.opts_plot = struct('base_image','original',... %['original', 'bw']
                                    'colour_smoothed_particle_boundaries','green',...
                                    'colour_max_inscribed_circle','red',...
-                                   'colour_corner_circles','cyan',...
+                                   'colour_corner_circles','blue',...
                                    'colour_info_text','magenta',...
                                    'font','Arial',...
                                    'plot_info','Particlenumber'); %['Particlenumber', 'Roundness']
@@ -130,7 +130,7 @@ classdef rcalculator < handle
             opts_roundness = obj.opts_roundness;
             opts_rgrains   = obj.opts_rgrains;
             SaveDate       = today("datetime");
-            save(save_path, 'opts_binarise','opts_plot','opts_export','opts_roundness','opts_rgrains');
+            save(save_path, 'opts_binarise','opts_plot','opts_export','opts_roundness','opts_rgrains', 'SaveDate');
             disp('Setting file saved.');
         end
         
@@ -149,15 +149,23 @@ classdef rcalculator < handle
         
         function [] = binariseImage(obj)
             fprintf('Binarising image...');
-            %binarise in-image
     
+            %check background color
+            switch obj.opts_binarise.particle_color
+                case 'Dark'
+                    im_in = imcomplement(obj.im_in);%complement image colour
+                case 'Bright'
+                    im_in = obj.im_in;
+            end
+
+            %rgb to grey 
             %check image type
-            if size(size(obj.im_in),2)==3
+            if size(size(im_in),2)==3
                 %case rgb image
-                im_grey = rgb2gray(im2double(obj.im_in));
-            elseif size(size(obj.im_in),2)==2
+                im_grey = rgb2gray(im_in);%rgb2gray(im2double(im_in));
+            elseif size(size(im_in),2)==2
                 %case bw or gray image
-                im_grey = im2double(obj.im_in);
+                im_grey = im_in;
             else
                 %otherwise
                 disp('\n Input data is potentially non image data.');
@@ -165,13 +173,6 @@ classdef rcalculator < handle
                 return;
             end
 
-            %check background color
-            switch obj.opts_binarise.particle_color
-                case 'Dark'
-                    im_grey = imcomplement(im_grey);%complement image colour
-                case 'Bright'
-            end
-            
             %binarise
             switch obj.opts_binarise.method
                 case 'Adaptive'
@@ -184,15 +185,15 @@ classdef rcalculator < handle
                     %colour image to gray image
                     %global(Otsu) method
                     im_bw = logical(imbinarize(im_grey, 'global'));
-                case 'Non'
+                case 'None'
                     %without binarization
                     if islogical(im_grey)==1
                         im_bw = im_grey;
                     else
-                        im_bw = logical(imbinarize(im,'global'));
+                        im_bw = logical(imbinarize(im_in,'global'));
                     end
             end
-            
+
             %remove small dots   
             im_bw = bwareafilt(im_bw, obj.opts_binarise.noise_thresholds, 4);
             
@@ -234,7 +235,7 @@ classdef rcalculator < handle
                             'Aspect',[],      'PCD',[],          'delta0',[]);
 
             if isempty(ax)==false
-                d = uiprogressdlg(ax, 'Title','Calculating roundness...','Message','Start computing','Cancelable','off');
+                d = uiprogressdlg(ax, 'Title','Calculating roundness...','Message','Start computing','Cancelable','on');
                 tic;
             end
 
@@ -359,6 +360,14 @@ classdef rcalculator < handle
                     RT = HMS_m((world_cc.NumObjects-i) * (toc/i));
                     d.Title = strcat('Calculating roundness(remaining time:',num2str(RT(1)),'h',num2str(RT(2)),'m',num2str(round(RT(3))),'s)');
                     d.Message = strcat('[',num2str(i),'/',num2str(world_cc.NumObjects),']: Calculating...',num2str(round(i / world_cc.NumObjects*100,1)),'%');
+                    if d.CancelRequested
+                        selection = uiconfirm(ax,'Cancel process?','Confirm Cancel','Icon','warning');
+                        switch selection
+                            case'OK'
+                                return
+                            case 'cancel'
+                        end
+                    end
                 end
                 textprogress_m( i, world_cc.NumObjects, obj.im_name)
             end
@@ -415,7 +424,7 @@ classdef rcalculator < handle
                 end
     
                 %show information
-                text(ax, cx, cy, num2str(obj.rprops(i).(obj.opts_plot.plot_info)), 'Color', obj.opts_plot.colour_info_text,'FontSize',15 );
+                text(ax, cx, cy, num2str(round(obj.rprops(i).(obj.opts_plot.plot_info),2)), 'Color', obj.opts_plot.colour_info_text,'FontSize',15 );
             end
             fontname(ax, obj.opts_plot.font);
         end
@@ -448,10 +457,17 @@ classdef rcalculator < handle
                 xlim([-6 4])
         end
     
-        function [] = export(obj, save_dir)
+        function [] = export(obj, save_dir, varargin)
             if exist(save_dir)~=7
                 disp("There is no such a directory.")
                 return
+            end
+
+            if length(varargin)==1
+                ax = varargin{1};
+                if isempty(ax)==false
+                    d = uiprogressdlg(ax, 'Title','Exporting results...','Message','Exporting...','Cancelable','off','Indeterminate','on');
+                end
             end
             
             warning('off')
@@ -459,11 +475,23 @@ classdef rcalculator < handle
             warning('on')
 
             if obj.opts_export.save_bw_image
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving binarised image...";
+                    end
+                end
+
                 imwrite(obj.im_bw,fullfile(save_dir, strcat(obj.im_name,'_BW.jpg')))
                 disp('BW image saved.');
             end
 
             if obj.opts_export.save_summary_image
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving summary image...";
+                    end
+                end
+
                 SS = get(0, 'ScreenSize');
                 f = figure('visible','off','Position',[SS(1) SS(2) SS(3) SS(4)]);
                 ax = gca;
@@ -474,6 +502,12 @@ classdef rcalculator < handle
             end
             
             if obj.opts_export.save_fitted_image_with_No
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving fitted image with No...";
+                    end
+                end
+
                 obj.opts_plot.base_image = 'original';%['original', 'bw']
                 obj.opts_plot.plot_info  = 'Particlenumber';%['Particlenumber', 'Roundness']
 
@@ -487,6 +521,12 @@ classdef rcalculator < handle
             end
 
             if obj.opts_export.save_fitted_image_vector
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving fitted vector image...";
+                    end
+                end
+
                 obj.opts_plot.base_image = 'original';%['original', 'bw']
                 obj.opts_plot.plot_info  = 'Particlenumber';%['Particlenumber', 'Roundness']
 
@@ -502,6 +542,12 @@ classdef rcalculator < handle
             end
 
             if obj.opts_export.save_fitted_image_with_Roundness
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving fitted image with roundness...";
+                    end
+                end
+
                 obj.opts_plot.base_image = 'original';%['original', 'bw']
                 obj.opts_plot.plot_info  = 'Roundness';%['Particlenumber', 'Roundness']
 
@@ -515,15 +561,34 @@ classdef rcalculator < handle
             end
 
             if obj.opts_export.save_csv
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving results table...";
+                    end
+                end
+
                 T = obj.makeResultTable();
                 writetable(T, fullfile(save_dir,strcat(obj.im_name,'_results.csv')));
                 disp('Results csv saved.');
             end
 
             if obj.opts_export.save_settings
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving settings...";
+                    end
+                end
+
                 obj.saveSettings(fullfile(save_dir,strcat(obj.im_name,'_settings.rgrains')))
             end
+
             disp('Done.');
+            
+            if length(varargin)==1
+                if isempty(ax)==false
+                    close(d);
+                end
+            end
         end
     end
     

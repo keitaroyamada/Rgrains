@@ -1,5 +1,5 @@
 function [concave, convex] = concave_convex_m(seglist, center, display)
-
+warning('off','all');
 concave = [];
 convex = [];
 indicator = zeros(size(seglist, 1), 1);
@@ -45,4 +45,5 @@ if display
 %         plot(concave(:,1), concave(:,2),'kx','LineWidth', 2);
 %     end
 end
+warning('on','all');
 end
