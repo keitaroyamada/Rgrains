@@ -27,7 +27,8 @@ classdef rcalculator < handle
                                        'adaptive_sensitivity',0.35,...
                                        'noise_thresholds',[490, Inf],...
                                        'ignore_particles_on_borders',true);
-            obj.opts_roundness = struct('trace_precision',0.060,...%span
+            obj.opts_roundness = struct( 'calc_roundness',true,...%calc roundness or not
+                                        'trace_precision',0.060,...%span
                                         'corner_sensitivity',0.017,...%tol
                                         'circle_precision',0.996,...%factor
                                         'image_scale',340,...%real scale of image[pix/cm]
@@ -322,6 +323,10 @@ classdef rcalculator < handle
                 rprops(i).Area        = stats(1).Area / (final_scale^2);%[cm^2]
                 rprops(i).Circularity = round(4*pi*(( pi*((equivdiameter/2)-0.5)^2)/((perimeter)^2)),5);%Circularity
 
+                if obj.opts_roundness.calc_roundness ==false
+                    %skip calculation of roundness
+                    continue
+                end
                 %segmentted boundary
                 seglist = segment_boundary_m(X, Y, obj.opts_roundness.corner_sensitivity, 0);
 
@@ -594,6 +599,10 @@ classdef rcalculator < handle
     
     methods (Access=private)
         function [] = histogramWithStats(obj, raw_data, X_bins, tname, xname, yname)
+            if isnumeric(raw_data)==false
+                %case of no roundness
+                return
+            end
             %base data
             [sorted_data, sorted_idx] = sort(raw_data);%min->max
             h = histogram(sorted_data, X_bins,'Normalization','probability');
