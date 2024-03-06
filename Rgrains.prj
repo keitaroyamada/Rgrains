@@ -8,8 +8,8 @@
     <param.icons />
     <param.summary />
     <param.description />
-    <param.screenshot />
-    <param.version>5.0.1</param.version>
+    <param.screenshot>C:\Users\slinn\AppData\Local\Temp\tp03dc4554_bdd3_4e6b_a4cc_7b0cc105ef88.png</param.screenshot>
+    <param.version>5.0.2</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -24,7 +24,6 @@
       <param.icons />
       <param.summary />
       <param.description />
-      <param.screenshot />
       <param.products.name />
       <param.products.id />
       <param.products.version />
