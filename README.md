@@ -28,11 +28,11 @@ The Rgrains has three versions: CUI and GUI(exective format and matapp format).
 - Matlab > 9.13 
 - Image processing toolbox > 11.6
 - Curve Fitting Toolbox > 3.8
-- Statistics and Machine Learning Toolbox > 12.4
+- ~~Statistics and Machine Learning Toolbox > 12.4~~ (Rgrains>5.0.3)
+- ~~Computer Vision Toolbox > 10.3~~ (Rgrains>5.0.3)
 
 ### GUI version (executable file) 
 - Windows 10, 11 (Intel)
-- Mac Sonoma 14.1.1 (Apple M1)
 - Matlab Runtime (Rgrains includes this online installer)
 
 ---
