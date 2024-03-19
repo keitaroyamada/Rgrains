@@ -4,6 +4,7 @@ classdef rcalculator < handle
     properties (SetAccess = public, GetAccess = public)
         im_dir;
         im_name;
+        im_ext;
         im_in;
         im_bw;
         im_bw_overlay;
@@ -20,14 +21,14 @@ classdef rcalculator < handle
     methods (Access=public)
         function obj = rcalculator()
             %initiarise;
-            obj.opts_rgrains = struct('version','Rgrains ver. 5.0.2 (2024 Mar 6)');
+            obj.opts_rgrains = struct('version','Rgrains ver. 5.0.3 (2024 Mar 19)');
             obj.opts_binarise = struct('upconvert',false,...
                                        'particle_color', 'Dark',...
                                        'method','Adaptive',...
                                        'adaptive_sensitivity',0.35,...
                                        'noise_thresholds',[490, Inf],...
                                        'ignore_particles_on_borders',true);
-            obj.opts_roundness = struct( 'calc_roundness',true,...%calc roundness or not
+            obj.opts_roundness = struct('calc_roundness',true,...%calc roundness or not
                                         'trace_precision',0.060,...%span
                                         'corner_sensitivity',0.017,...%tol
                                         'circle_precision',0.996,...%factor
@@ -47,6 +48,8 @@ classdef rcalculator < handle
                                      'save_fitted_image_with_Roundness',true,...
                                      'save_summary_image',true,...
                                      'save_csv',true,...
+                                     'save_annotation',false,...
+                                     'annotation_target','Roundness',...%[supports params stored in rprops]
                                      'save_settings',false);
         end
         
@@ -130,14 +133,14 @@ classdef rcalculator < handle
             opts_plot      = obj.opts_plot;
             opts_roundness = obj.opts_roundness;
             opts_rgrains   = obj.opts_rgrains;
-            SaveDate       = today("datetime");
+            SaveDate       = datetime("today");
             save(save_path, 'opts_binarise','opts_plot','opts_export','opts_roundness','opts_rgrains', 'SaveDate');
             disp('Setting file saved.');
         end
         
         function [] = loadImage(obj, im_path)
             fprintf('Loading image...');
-            [obj.im_dir, obj.im_name,~] = fileparts(im_path);
+            [obj.im_dir, obj.im_name, obj.im_ext] = fileparts(im_path);
 
             %upconverting
             if obj.opts_binarise.upconvert==true
@@ -215,7 +218,7 @@ classdef rcalculator < handle
         end
 
         function [] = calcRoundness(obj, ax)
-            disp('Calculating roundness...');
+            disp('Calculating...');
             %numbering conected pixcels
             world_cc = bwconncomp(obj.im_bw, 4);
             world_particle_props = discrete_boundary_m(world_cc);
@@ -229,19 +232,22 @@ classdef rcalculator < handle
 
             %initiarise
             rprops = [];%initiarise
-            rprops = struct('SourceName', [], 'SourceImage', [], 'ROI', [],       'ResolutionScale', [],...
+            rprops = struct('SourceImage',[], 'ROI', [],         'ResolutionScale', [],...
                             'Edges',[],       'Centroid',[],     'R',[],          'Particlenumber',[],...
                             'Smallcircles',[],'Roundness',[],    'r',[],          'Segmentation',[],...    
                             'Circularity',[], 'Majorlength',[],  'Minorlength',[],'Area',[],...
                             'Aspect',[],      'PCD',[],          'delta0',[]);
 
             if isempty(ax)==false
-                d = uiprogressdlg(ax, 'Title','Calculating roundness...','Message','Start computing','Cancelable','on');
+                d = uiprogressdlg(ax, 'Title','Calculating...','Message','Start computing','Cancelable','on');
                 tic;
             end
 
             %main process
             for i = 1:world_cc.NumObjects
+                %add image name
+                rprops(i).SourceImage = strcat(obj.im_name, obj.im_ext);
+
                 %add particle number
                 rprops(i).Particlenumber = i;
 
@@ -363,7 +369,7 @@ classdef rcalculator < handle
                 if isempty(ax)==false
                     d.Value = (i / world_cc.NumObjects);
                     RT = HMS_m((world_cc.NumObjects-i) * (toc/i));
-                    d.Title = strcat('Calculating roundness(remaining time:',num2str(RT(1)),'h',num2str(RT(2)),'m',num2str(round(RT(3))),'s)');
+                    d.Title = strcat('Calculating (remaining time:',num2str(RT(1)),'h',num2str(RT(2)),'m',num2str(round(RT(3))),'s)');
                     d.Message = strcat('[',num2str(i),'/',num2str(world_cc.NumObjects),']: Calculating...',num2str(round(i / world_cc.NumObjects*100,1)),'%');
                     if d.CancelRequested
                         selection = uiconfirm(ax,'Cancel process?','Confirm Cancel','Icon','warning');
@@ -378,7 +384,7 @@ classdef rcalculator < handle
             end
 
             obj.rprops = rprops;
-            disp('Done.')
+            disp('Calculating...Done.')
         end
 
         function [] = makeResultImage(obj, ax)
@@ -393,42 +399,43 @@ classdef rcalculator < handle
 
             %add results
             for i=1:length(obj.rprops)
-                if isempty(obj.rprops(i).Roundness)==1
-                    continue
-                end
-                if isnan(obj.rprops(i).R)==0
-                    %reconstruction of resolution
-                    rs = (1/obj.rprops(i).ResolutionScale);
-        
-                    %smooth particle edges
-                    X = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
-                    Y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
-                    plot(ax, X, Y, obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', 0.5);
-                    hold(ax,'on')
-                    
-                    %Maximum inscribed circle
-                    R = obj.rprops(i).R .* rs;
-                    theta = [linspace(0,2*pi, 100)];
-                    cx = obj.rprops(i).ROI(1) + obj.rprops(i).Centroid(:,2) .* rs; 
-                    cy = obj.rprops(i).ROI(2) + obj.rprops(i).Centroid(:,1) .* rs;
-                    plot(ax, cos(theta)*R+cx, sin(theta)*R+cy, 'color', obj.opts_plot.colour_max_inscribed_circle,'LineWidth', 0.2);
-                    hold(ax,'on')
-                    
-                    %small inscribed circles
-                    if isnan(obj.rprops(i).Smallcircles)==0
-                        zx = obj.rprops(i).ROI(1) + obj.rprops(i).Smallcircles(:,1) .* rs;%cetre of circels
-                        zy = obj.rprops(i).ROI(2) + obj.rprops(i).Smallcircles(:,2) .* rs;%cetre of circels
-                        r  = obj.rprops(i).Smallcircles(:,3) .* rs;%radius of circles
-                        for ss = 1:size(r,1)
-                            plot(ax, zx(ss), zy(ss),...   % plot the center of circles
-                                zx(ss)  + r(ss)  * cos(theta), zy(ss)  + r(ss) * sin(theta),...
-                                obj.opts_plot.colour_corner_circles,'LineWidth', 0.1);
-                            hold(ax,'on')
+                if ~isempty(obj.rprops(i).Roundness)
+                    if ~isnan(obj.rprops(i).R)
+                        %reconstruction of resolution
+                        rs = (1/obj.rprops(i).ResolutionScale);
+            
+                        %smooth particle edges
+                        X = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
+                        Y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
+                        plot(ax, X, Y, obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', 0.5);
+                        hold(ax,'on')
+                        
+                        %Maximum inscribed circle
+                        R = obj.rprops(i).R .* rs;
+                        theta = [linspace(0,2*pi, 100)];
+                        cx = obj.rprops(i).ROI(1) + obj.rprops(i).Centroid(:,2) .* rs; 
+                        cy = obj.rprops(i).ROI(2) + obj.rprops(i).Centroid(:,1) .* rs;
+                        plot(ax, cos(theta)*R+cx, sin(theta)*R+cy, 'color', obj.opts_plot.colour_max_inscribed_circle,'LineWidth', 0.2);
+                        hold(ax,'on')
+                        
+                        %small inscribed circles
+                        if isnan(obj.rprops(i).Smallcircles)==0
+                            zx = obj.rprops(i).ROI(1) + obj.rprops(i).Smallcircles(:,1) .* rs;%cetre of circels
+                            zy = obj.rprops(i).ROI(2) + obj.rprops(i).Smallcircles(:,2) .* rs;%cetre of circels
+                            r  = obj.rprops(i).Smallcircles(:,3) .* rs;%radius of circles
+                            for ss = 1:size(r,1)
+                                plot(ax, zx(ss), zy(ss),...   % plot the center of circles
+                                    zx(ss)  + r(ss)  * cos(theta), zy(ss)  + r(ss) * sin(theta),...
+                                    obj.opts_plot.colour_corner_circles,'LineWidth', 0.1);
+                                hold(ax,'on')
+                            end
                         end
                     end
                 end
-    
+
                 %show information
+                cx = obj.rprops(i).ROI(1) + obj.rprops(i).Centroid(:,2) .* (1/obj.rprops(i).ResolutionScale); 
+                cy = obj.rprops(i).ROI(2) + obj.rprops(i).Centroid(:,1) .* (1/obj.rprops(i).ResolutionScale);
                 text(ax, cx, cy, num2str(round(obj.rprops(i).(obj.opts_plot.plot_info),2)), 'Color', obj.opts_plot.colour_info_text,'FontSize',15 );
             end
             fontname(ax, obj.opts_plot.font);
@@ -587,7 +594,22 @@ classdef rcalculator < handle
                 obj.saveSettings(fullfile(save_dir,strcat(obj.im_name,'_settings.rgrains')))
             end
 
-            disp('Done.');
+            if obj.opts_export.save_annotation
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving annotation xml...";
+                    end
+                end
+
+                docNode = make_annotation_m(obj);
+                
+                %save as xml
+                xmlwrite(fullfile(save_dir,strcat(obj.im_name,'.xml')), docNode);
+                disp('Annotation xml saved.');
+            end
+
+
+            disp('Exporting...Done.');
             
             if length(varargin)==1
                 if isempty(ax)==false
@@ -647,8 +669,8 @@ classdef rcalculator < handle
             %plot statistics info
             Y_median   = median(sorted_data);
             Y_mean     = mean(sorted_data);
-            Y_skewness = skewness(sorted_data);
-            Y_kurtosis = kurtosis(sorted_data);
+            Y_skewness = skewness_r(sorted_data);
+            Y_kurtosis = kurtosis_r(sorted_data);
             [~,Midx]   = max(Y_hist);
             Y_mode     = X_bins(Midx);
             Y_95error  = 1.96*sqrt((std(sorted_data)^2)/numel(sorted_data));%95.5 2, 99.7 3, 95 1.96, 99 2.58
