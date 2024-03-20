@@ -78,11 +78,11 @@ function [docNode] = make_annotation_m(obj)
         cur_node05.appendChild(cur_node52);
 
         cur_node53 = docNode.createElement('xmax');
-        cur_node53.appendChild(docNode.createTextNode(num2str(obj.rprops(ob).ROI(1)+obj.rprops(ob).ROI(3))));
+        cur_node53.appendChild(docNode.createTextNode(num2str(obj.rprops(ob).ROI(1)+obj.rprops(ob).ROI(3) - 1)));
         cur_node05.appendChild(cur_node53);
 
         cur_node54 = docNode.createElement('ymax');
-        cur_node54.appendChild(docNode.createTextNode(num2str(obj.rprops(ob).ROI(2)+obj.rprops(ob).ROI(4))));
+        cur_node54.appendChild(docNode.createTextNode(num2str(obj.rprops(ob).ROI(2)+obj.rprops(ob).ROI(4) - 1)));
         cur_node05.appendChild(cur_node54);
 
         cur_node0.appendChild(cur_node05);
