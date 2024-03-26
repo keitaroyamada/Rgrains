@@ -1,4 +1,4 @@
-classdef rcalculator < handle
+classdef rgrains < handle
     %RCALCULATOR provides calculation of roundness from a image
     
     properties (SetAccess = public, GetAccess = public)
@@ -19,15 +19,15 @@ classdef rcalculator < handle
     end
     
     methods (Access=public)
-        function obj = rcalculator()
+        function obj = rgrains()
             %initiarise;
-            obj.opts_rgrains = struct('version','Rgrains ver. 5.0.3 (2024 Mar 20)');
-            obj.opts_binarise = struct('upconvert',false,...
-                                       'particle_color', 'Dark',...
-                                       'method','Adaptive',...
-                                       'adaptive_sensitivity',0.35,...
-                                       'noise_thresholds',[490, Inf],...
-                                       'ignore_particles_on_borders',true);
+            obj.opts_rgrains   = struct('version','Rgrains ver. 5.0.4 (2024 Mar 26)');
+            obj.opts_binarise  = struct('upconvert',false,...
+                                        'particle_color', 'Dark',...
+                                        'method','Adaptive',...
+                                        'adaptive_sensitivity',0.35,...
+                                        'noise_thresholds',[490, Inf],...
+                                        'ignore_particles_on_borders',true);
             obj.opts_roundness = struct('calc_roundness',true,...%calc roundness or not
                                         'trace_precision',0.060,...%span
                                         'corner_sensitivity',0.017,...%tol
@@ -35,22 +35,26 @@ classdef rcalculator < handle
                                         'image_scale',340,...%real scale of image[pix/cm]
                                         'PCD_normarisation',true,...%size normarising by PCD
                                         'PCD_size',200);%target size of PCD
-            obj.opts_plot = struct('base_image','original',... %['original', 'bw']
-                                   'colour_smoothed_particle_boundaries','green',...
-                                   'colour_max_inscribed_circle','red',...
-                                   'colour_corner_circles','blue',...
-                                   'colour_info_text','magenta',...
-                                   'font','Arial',...
-                                   'plot_info','Particlenumber'); %['Particlenumber', 'Roundness']
-            obj.opts_export = struct('save_bw_image',true,...
-                                     'save_fitted_image_with_No',true,...
-                                     'save_fitted_image_vector',false,...
-                                     'save_fitted_image_with_Roundness',true,...
-                                     'save_summary_image',true,...
-                                     'save_csv',true,...
-                                     'save_annotation',false,...
-                                     'annotation_target','Roundness',...%[supports params stored in rprops]
-                                     'save_settings',false);
+            obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
+                                        'colour_smoothed_particle_boundaries','magenta',...
+                                        'thickness_smoothed_particle_boundaries',1.5,...
+                                        'colour_max_inscribed_circle','red',...
+                                        'thickness_max_inscribed_circle',1.5,...
+                                        'colour_corner_circles','cyan',...
+                                        'thickness_corner_circles',0.5,...
+                                        'colour_info_text','yellow',...
+                                        'font_size_info_text',15,...
+                                        'font','Arial',...
+                                        'plot_info','Particlenumber'); %['Particlenumber', 'Roundness']
+            obj.opts_export    = struct('save_bw_image',true,...
+                                        'save_fitted_image_with_No',true,...
+                                        'save_fitted_image_vector',false,...
+                                        'save_fitted_image_with_Roundness',true,...
+                                        'save_summary_image',true,...
+                                        'save_csv',true,...
+                                        'save_annotation',false,...
+                                        'annotation_target','Roundness',...%[supports params stored in rprops]
+                                        'save_settings',false);%save settings for each image 
         end
         
         function [] = loadSettings(obj, load_path)
@@ -135,7 +139,7 @@ classdef rcalculator < handle
             opts_rgrains   = obj.opts_rgrains;
             SaveDate       = datetime("today");
             save(save_path, 'opts_binarise','opts_plot','opts_export','opts_roundness','opts_rgrains', 'SaveDate');
-            disp('Setting file saved.');
+            disp('Rraings setting file is saved.');
         end
         
         function [] = loadImage(obj, im_path)
@@ -407,7 +411,7 @@ classdef rcalculator < handle
                         %smooth particle edges
                         X = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
                         Y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
-                        plot(ax, X, Y, obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', 0.5);
+                        plot(ax, X, Y, 'Color', obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', obj.opts_plot.thickness_smoothed_particle_boundaries);
                         hold(ax,'on')
                         
                         %Maximum inscribed circle
@@ -415,7 +419,7 @@ classdef rcalculator < handle
                         theta = [linspace(0,2*pi, 100)];
                         cx = obj.rprops(i).ROI(1) + obj.rprops(i).Centroid(:,2) .* rs; 
                         cy = obj.rprops(i).ROI(2) + obj.rprops(i).Centroid(:,1) .* rs;
-                        plot(ax, cos(theta)*R+cx, sin(theta)*R+cy, 'color', obj.opts_plot.colour_max_inscribed_circle,'LineWidth', 0.2);
+                        plot(ax, cos(theta)*R+cx, sin(theta)*R+cy, 'Color', obj.opts_plot.colour_max_inscribed_circle,'LineWidth', obj.opts_plot.thickness_max_inscribed_circle);
                         hold(ax,'on')
                         
                         %small inscribed circles
@@ -426,7 +430,7 @@ classdef rcalculator < handle
                             for ss = 1:size(r,1)
                                 plot(ax, zx(ss), zy(ss),...   % plot the center of circles
                                     zx(ss)  + r(ss)  * cos(theta), zy(ss)  + r(ss) * sin(theta),...
-                                    obj.opts_plot.colour_corner_circles,'LineWidth', 0.1);
+                                    'Color',obj.opts_plot.colour_corner_circles,'LineWidth', obj.opts_plot.thickness_corner_circles);
                                 hold(ax,'on')
                             end
                         end
@@ -436,7 +440,7 @@ classdef rcalculator < handle
                 %show information
                 cx = obj.rprops(i).ROI(1) + obj.rprops(i).Centroid(:,2) .* (1/obj.rprops(i).ResolutionScale); 
                 cy = obj.rprops(i).ROI(2) + obj.rprops(i).Centroid(:,1) .* (1/obj.rprops(i).ResolutionScale);
-                text(ax, cx, cy, num2str(round(obj.rprops(i).(obj.opts_plot.plot_info),2)), 'Color', obj.opts_plot.colour_info_text,'FontSize',15 );
+                text(ax, cx, cy, num2str(round(obj.rprops(i).(obj.opts_plot.plot_info),2)), 'Color', obj.opts_plot.colour_info_text,'FontSize',obj.opts_plot.font_size_info_text);
             end
             fontname(ax, obj.opts_plot.font);
         end
@@ -494,7 +498,7 @@ classdef rcalculator < handle
                 end
 
                 imwrite(obj.im_bw,fullfile(save_dir, strcat(obj.im_name,'_BW.jpg')))
-                disp('BW image saved.');
+                disp('BW image is saved.');
             end
 
             if obj.opts_export.save_summary_image
@@ -510,7 +514,7 @@ classdef rcalculator < handle
                 obj.makeSummaryImage(ax);
                 exportgraphics(f, fullfile(save_dir,strcat(obj.im_name,'_summary.png')),'Resolution',300);
                 close(f)
-                disp('Summary figure saved.');
+                disp('Summary figure is saved.');
             end
             
             if obj.opts_export.save_fitted_image_with_No
@@ -529,7 +533,7 @@ classdef rcalculator < handle
                 obj.makeResultImage(ax);
                 exportgraphics(f, fullfile(save_dir,strcat(obj.im_name,'_fitted_No.jpg')));
                 close(f)
-                disp('Number image saved.');
+                disp('Number image is saved.');
             end
 
             if obj.opts_export.save_fitted_image_vector
@@ -550,7 +554,7 @@ classdef rcalculator < handle
                 exportgraphics(f, fullfile(save_dir,strcat(obj.im_name,'_fitted_vector.eps')),'ContentType','vector');
                 warning('on')
                 close(f)
-                disp('Vector image saved.');
+                disp('Vector image is saved.');
             end
 
             if obj.opts_export.save_fitted_image_with_Roundness
@@ -569,7 +573,7 @@ classdef rcalculator < handle
                 obj.makeResultImage(ax);
                 exportgraphics(f, fullfile(save_dir,strcat(obj.im_name,'_fitted_R.jpg')));
                 close(f)
-                disp('Roundness image saved.');
+                disp('Roundness image is saved.');
             end
 
             if obj.opts_export.save_csv
@@ -581,7 +585,7 @@ classdef rcalculator < handle
 
                 T = obj.makeResultTable();
                 writetable(T, fullfile(save_dir,strcat(obj.im_name,'_results.csv')));
-                disp('Results csv saved.');
+                disp('Results csv is saved.');
             end
 
             if obj.opts_export.save_settings
@@ -591,7 +595,7 @@ classdef rcalculator < handle
                     end
                 end
 
-                obj.saveSettings(fullfile(save_dir,strcat(obj.im_name,'_settings.rgrains')))
+                obj.saveSettings(fullfile(save_dir,strcat(obj.im_name,'_settings.rgrains')));
             end
 
             if obj.opts_export.save_annotation
@@ -605,7 +609,7 @@ classdef rcalculator < handle
                 
                 %save as xml
                 xmlwrite(fullfile(save_dir,strcat(obj.im_name,'.xml')), docNode);
-                disp('Annotation xml saved.');
+                disp('Annotation xml is saved.');
             end
 
 
