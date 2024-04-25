@@ -38,7 +38,7 @@ The Rgrains has three versions: CUI and GUI(exective format and matapp format).
 ---
 ## Usage
 The Rgrains has three versions: CUI and GUI(exective format and matapp format). 
-Instructions on how to use each version is available in the **[Rgrains Usage](https://github.com/keitaroyamada/Rgrains/wiki)**. 
+Instructions on how to use each version is available in the Rgrains Usage (**[English](https://github.com/keitaroyamada/Rgrains/wiki)** / [日本語](https://github.com/keitaroyamada/Rgrains/wiki/Rgrains%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)).
 
 ---
 ## References
