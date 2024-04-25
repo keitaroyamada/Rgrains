@@ -21,12 +21,7 @@ rg.opts_binarise = struct('upconvert', true,...
 rg.binariseImage();
 
 figure
-subplot(1,2,1)
-    imshow(rg.im_in)
-    title('Input image')
-subplot(1,2,2)
-    imshow(rg.im_bw)
-    title('Binarised image')
+imshow(imfuse(rg.im_in, rg.im_bw))
 
 %calculate roundness 
 rg.opts_roundness = struct('calc_roundness',true, ...

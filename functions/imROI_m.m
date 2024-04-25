@@ -1,5 +1,5 @@
 function [ ROI_im ] = imROI_m(im, ROI, padding)
-%ROI: [x0,w, y0, h]
+%ROI: [x0,y0, w, h]
     
     %measure image size
     S=size(im);

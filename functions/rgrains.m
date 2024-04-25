@@ -2,6 +2,12 @@ classdef rgrains < handle
     %RCALCULATOR provides calculation of roundness from a image
     
     properties (SetAccess = public, GetAccess = public)
+        opts_binarise;
+        opts_roundness;
+        opts_plot;
+        opts_export;
+        opts_rgrains;
+
         im_dir;
         im_name;
         im_ext;
@@ -9,19 +15,13 @@ classdef rgrains < handle
         im_bw;
         im_bw_overlay;
 
-        opts_binarise;
-        opts_roundness;
-        opts_plot;
-        opts_export;
-        opts_rgrains;
-
         rprops;
     end
     
     methods (Access=public)
         function obj = rgrains()
             %initiarise;
-            obj.opts_rgrains   = struct('version','Rgrains ver. 5.0.4 (2024 Mar 26)');
+            obj.opts_rgrains   = struct('version','Rgrains ver. 5.1.0 (2024 Apr 25)');
             obj.opts_binarise  = struct('upconvert',false,...
                                         'particle_color', 'Dark',...
                                         'method','Adaptive',...
@@ -193,6 +193,28 @@ classdef rgrains < handle
                     %colour image to gray image
                     %global(Otsu) method
                     im_bw = logical(imbinarize(im_grey, 'global'));
+                case 'Absolute'
+                    th = obj.opts_binarise.adaptive_sensitivity;
+                    im_bw = im2double(im_grey);
+                    im_bw(im_bw >= th)  = 1;
+                    im_bw(im_bw < th) = 0;
+                    im_bw = logical(im_bw);
+                case 'Edge'
+                    se = strel("disk",5);
+                    im_grey_close = imclose(im_grey, se);
+                    im_edge = edge(im_grey,"canny",[0.03, obj.opts_binarise.adaptive_sensitivity]);
+                    im_edge = imclose(im_edge, se);
+                    im_edge = imfill(im_edge,'holes');
+                    se = strel("disk",10);
+                    im_edge = imopen(im_edge,se);
+                    se = strel("disk",5);
+                    im_edge = imclose(im_edge,se);
+                    
+                    im_bw = imbinarize(im_grey, "global");
+                    im_bw = im_bw + im_edge;
+                    im_bw(im_bw>=1)=1;
+                    im_bw = logical(im_bw);
+
                 case 'None'
                     %without binarization
                     if islogical(im_grey)==1
@@ -226,7 +248,7 @@ classdef rgrains < handle
             %numbering conected pixcels
             world_cc = bwconncomp(obj.im_bw, 4);
             world_particle_props = discrete_boundary_m(world_cc);
-
+            
             %mod image scale
             if obj.opts_binarise.upconvert ==true
                 image_scale = obj.opts_roundness.image_scale * 2;
@@ -236,11 +258,13 @@ classdef rgrains < handle
 
             %initiarise
             rprops = [];%initiarise
-            rprops = struct('SourceImage',[], 'ROI', [],         'ResolutionScale', [],...
-                            'Edges',[],       'Centroid',[],     'R',[],          'Particlenumber',[],...
-                            'Smallcircles',[],'Roundness',[],    'r',[],          'Segmentation',[],...    
-                            'Circularity',[], 'Majorlength',[],  'Minorlength',[],'Area',[],...
-                            'Aspect',[],      'PCD',[],          'delta0',[]);
+            rprops = struct('SourceImage',[],       'ROI', [],         'ResolutionScale', [],...
+                            'Particlenumber',[],    'Originaledges',[],'Edges',[],...
+                            'Centroid',[],          'Area',[],         'Orientation',[],...
+                            'Roundness',[],         'R',[],            'Smallcircles',[],...
+                            'Majorlength',[],       'Minorlength',[],  'Aspect',[],...
+                            'Circularity',[],       'PCD',[],          'delta0',[],...
+                            'Lval',[],              'aval', [],        'bval',[]);
 
             if isempty(ax)==false
                 d = uiprogressdlg(ax, 'Title','Calculating...','Message','Start computing','Cancelable','on');
@@ -258,12 +282,22 @@ classdef rgrains < handle
                 %extract each particle image
                 im_mask = zeros(size(obj.im_bw));
                 im_mask(world_cc.PixelIdxList{1,i})=1;
-                im_masked = obj.im_bw .* im_mask;%masked image
+                im_masked = logical(obj.im_bw .* im_mask);%masked image
+                im_mask_nan = im_mask;
+                im_mask_nan(im_mask_nan==0)=NaN;
 
                 roi       = world_particle_props.objects(i).bbox;
                 roi       = [round(roi(1)-2), round(roi(2)-2), round(roi(3)+4), round(roi(4)+4)];%expanding
                 im_trimed = imROI_m(im_masked, roi, 0);%trimed image
                 rprops(i).ROI = roi;
+
+                %get colours
+                im_trimed_lab = rgb2lab(imROI_m(obj.im_in,roi,0));
+                im_trimed_rgb = cat(3, im_trimed_lab(:,:,1) .* imROI_m(im_mask_nan, roi, 0), im_trimed_lab(:,:,2) .* imROI_m(im_mask_nan, roi, 0), im_trimed_lab(:,:,3) .* imROI_m(im_mask_nan, roi, 0));
+                lab = mean(mean(im_trimed_rgb,"omitnan"),"omitnan");
+                rprops(i).Lval = lab(1);
+                rprops(i).aval = lab(2);
+                rprops(i).bval = lab(3);
 
                 %scaling image resolution 
                 if obj.opts_roundness.PCD_normarisation == true
@@ -272,8 +306,7 @@ classdef rgrains < handle
                     world_x   = world_xy(:, 1);
                     world_y   = world_xy(:, 2);
                     [~,rcum]  = min_circum_circle_m(world_x,world_y);
-                    world_PCD = 2*rcum;
-                    
+                    world_PCD = 2 * rcum;
                     resolution_scale = obj.opts_roundness.PCD_size ./ world_PCD; %normalise using PCD
                 else
                     resolution_scale = 1;
@@ -291,7 +324,9 @@ classdef rgrains < handle
                 %estimate particle edges
                 particle_props = discrete_boundary_m(cc);%boundary line segmentation 
                 fitted_particle_props = nonparametric_fitting_m(particle_props, obj.opts_roundness.trace_precision);%estimate smooth edges
-
+                rprops(i).Originaledges = particle_props.objects(1).rawXY;%original segmentations
+                rprops(i).Orientation = particle_props.objects(1).orientation;%particle Orientation
+                
                 %make boundary data
                 ob = cc.PixelIdxList{1};%pixcel list of each aparticle
                 [R, RInd] = max(dist_map(ob)); %Radius and center pixcel location of maximum inscribed circle 
@@ -301,6 +336,7 @@ classdef rgrains < handle
 
                 boundary_points = fitted_particle_props.objects(1).cartesian;%smoothed particle edge
                 rprops(i).Edges = boundary_points;
+
                 X = boundary_points(:, 1);
                 Y = boundary_points(:, 2);
 
@@ -314,7 +350,6 @@ classdef rgrains < handle
                     rprops(i).Area        = nan;
                     rprops(i).Circularity = nan;
                     rprops(i).Smallcircles= nan;
-                    rprops(i).r           = nan;
                     rprops(i).Roundness   = nan;
                     rprops(i).PCD         = nan;
                     rprops(i).delta0      = nan;
@@ -356,7 +391,6 @@ classdef rgrains < handle
                 end
 
                 rprops(i).Smallcircles = [z, r];
-                rprops(i).r = r';
 
                 %calculate roundness
                 Roundness = mean(r) / R;
@@ -446,7 +480,11 @@ classdef rgrains < handle
         end
 
         function [result_table] = makeResultTable(obj)
-            result_table = struct2table(obj.rprops);
+            if height(obj.rprops)==1
+                result_table = struct2table(obj.rprops,AsArray=true);
+            else
+                result_table = struct2table(obj.rprops);
+            end
             result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','PCD','delta0'});
             result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','PCD','delta0'};
         end
@@ -454,7 +492,11 @@ classdef rgrains < handle
         function [] = makeSummaryImage(obj, ax)
             subplot(ax);
             fontname(ax, "Arial");
-            temp = struct2table(obj.rprops);
+            if height(obj.rprops)==1
+                temp = struct2table(obj.rprops,AsArray=true);
+            else
+                temp = struct2table(obj.rprops);
+            end
 
             subplot(2,3,1)
                 obj.histogramWithStats(temp.Roundness, [0:0.05:1], 'Roundness', 'Roundness',strcat('Probability(N=',num2str(size(temp.Roundness,1)),')'))
