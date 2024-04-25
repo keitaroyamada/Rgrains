@@ -485,8 +485,9 @@ classdef rgrains < handle
             else
                 result_table = struct2table(obj.rprops);
             end
-            result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','PCD','delta0'});
-            result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','PCD','delta0'};
+
+            result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0'});
+            result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0'};
         end
     
         function [] = makeSummaryImage(obj, ax)
