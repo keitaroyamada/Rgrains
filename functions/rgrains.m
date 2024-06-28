@@ -668,6 +668,7 @@ classdef rgrains < handle
     end
     
     methods (Access=private)
+
         function [] = histogramWithStats(obj, raw_data, X_bins, tname, xname, yname)
             if isnumeric(raw_data)==false
                 %case of no roundness
