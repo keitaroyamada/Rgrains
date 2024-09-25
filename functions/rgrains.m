@@ -34,7 +34,8 @@ classdef rgrains < handle
                                         'circle_precision',0.996,...%factor
                                         'image_scale',340,...%real scale of image[pix/cm]
                                         'PCD_normarisation',true,...%size normarising by PCD
-                                        'PCD_size',200);%target size of PCD
+                                        'PCD_size',200,...%target size of PCD
+                                        'Circularity_type','legacy');%type of circularity ['new', 'legacy']
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
                                         'colour_smoothed_particle_boundaries','magenta',...
                                         'thickness_smoothed_particle_boundaries',1.5,...
@@ -342,7 +343,7 @@ classdef rgrains < handle
                 Y = boundary_points(:, 2);
 
                 %estimate other parameters
-                stats = boundary_regionprops(boundary_points, {'Area','Centroid','Perimeter','MajorAxisLength','MinorAxisLength','EquivDiameter'});
+                stats = boundary_regionprops(boundary_points, {'Area','Centroid','Perimeter','MajorAxisLength','MinorAxisLength','EquivDiameter','Circularity'});
                 if isempty(stats)==1
                     disp(strcat('Empty detected. Particle No',num2str(i),'is skipped'))
                     rprops(i).Majorlength = nan;
@@ -367,7 +368,12 @@ classdef rgrains < handle
                 rprops(i).Minorlength = stats(1).MinorAxisLength / final_scale;%[pix->cm]
                 rprops(i).Aspect      = stats(1).MinorAxisLength / stats(1).MajorAxisLength;%[]
                 rprops(i).Area        = stats(1).Area / (final_scale^2);%[cm^2]
-                rprops(i).Circularity = round(4*pi*(( pi*((equivdiameter/2)-0.5)^2)/((perimeter)^2)),5);%Circularity
+                switch obj.opts_roundness.Circularity_type 
+                    case 'legacy'
+                        rprops(i).Circularity = round(4*pi*(( pi*((equivdiameter/2)-0.5)^2)/((perimeter)^2)),5);%Circularity
+                    case 'new'
+                        rprops(i).Circularity = stats(1).Circularity;%[]
+                end
 
                 if obj.opts_roundness.calc_roundness ==false
                     %skip calculation of roundness
