@@ -35,7 +35,7 @@ classdef rgrains < handle
                                         'circle_precision',0.996,...%factor
                                         'image_scale',340,...%real scale of image[pix/cm]
                                         'PCD_normalisation',true,...%size normalising by PCD
-                                        'PCD_size',200,...%target size of PCD
+                                        'PCD_size',300,...%target size of PCD
                                         'Circularity_type','legacy');%type of circularity ['new', 'legacy']
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
                                         'colour_smoothed_particle_boundaries','magenta',...

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="471961241" file="C:\Users\slinn\Dropbox\Matlab\github\Rgrains\Rgrains.prj" location="C:\Users\slinn\Dropbox\Matlab\github\Rgrains" name="Rgrains" target="target.mlapps" target-name="アプリのパッケージ化">
+  <configuration build-checksum="3871004583" file="C:\Users\slinn\Dropbox\Matlab\github\Rgrains\Rgrains.prj" location="C:\Users\slinn\Dropbox\Matlab\github\Rgrains" name="Rgrains" target="target.mlapps" target-name="アプリのパッケージ化">
     <param.appname>Rgrains</param.appname>
     <param.authnamewatermark />
     <param.email />
@@ -8,8 +8,8 @@
     <param.icons />
     <param.summary />
     <param.description />
-    <param.screenshot />
-    <param.version>5.1.0</param.version>
+    <param.screenshot>C:\Users\slinn\AppData\Local\Temp\tp14205025_08f1_44a9_ac54_1c87a9a237b5.png</param.screenshot>
+    <param.version>5.1.1</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -24,7 +24,6 @@
       <param.icons />
       <param.summary />
       <param.description />
-      <param.screenshot />
       <param.products.name />
       <param.products.id />
       <param.products.version />
