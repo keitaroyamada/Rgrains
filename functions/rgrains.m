@@ -1,3 +1,4 @@
+%!git push --force-with-lease 
 classdef rgrains < handle
     %RCALCULATOR provides calculation of roundness from a image
     
@@ -33,7 +34,7 @@ classdef rgrains < handle
                                         'corner_sensitivity',0.017,...%tol
                                         'circle_precision',0.996,...%factor
                                         'image_scale',340,...%real scale of image[pix/cm]
-                                        'PCD_normarisation',true,...%size normarising by PCD
+                                        'PCD_normalisation',true,...%size normalising by PCD
                                         'PCD_size',200,...%target size of PCD
                                         'Circularity_type','legacy');%type of circularity ['new', 'legacy']
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
@@ -116,11 +117,11 @@ classdef rgrains < handle
             obj.opts_roundness.circle_precision = data.T_R;
             obj.opts_roundness.image_scale = data.Imagescale;
 
-            switch data.Size_normarization{1}
+            switch data.Size_normalization{1}
                 case 'off'
-                    obj.opts_roundness.PCD_normarisation = false;
+                    obj.opts_roundness.PCD_normalisation = false;
                 case 'on'
-                    obj.opts_roundness.PCD_normarisation = true;
+                    obj.opts_roundness.PCD_normalisation = true;
             end
             disp('Legacy setting file loaded.');
         end
@@ -302,7 +303,7 @@ classdef rgrains < handle
                 rprops(i).bval = lab(3);
 
                 %scaling image resolution 
-                if obj.opts_roundness.PCD_normarisation == true
+                if obj.opts_roundness.PCD_normalisation == true
                     %calc original PCD
                     world_xy  = world_particle_props.objects(i).rawXY;
                     world_x   = world_xy(:, 1);
