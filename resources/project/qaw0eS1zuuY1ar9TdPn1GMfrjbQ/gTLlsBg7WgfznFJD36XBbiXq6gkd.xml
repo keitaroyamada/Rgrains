@@ -9,4 +9,7 @@
     <Category UUID="Deployment_Category_195e1c90-7d0f-452d-aef5-779c8bd15ad0">
         <Label UUID="Deployment_MainFile_195e1c90-7d0f-452d-aef5-779c8bd15ad0"/>
     </Category>
+    <Category UUID="Deployment_Category_53b92447-853a-4274-bb57-3165d4480a86">
+        <Label UUID="Deployment_MainFile_53b92447-853a-4274-bb57-3165d4480a86"/>
+    </Category>
 </Info>
