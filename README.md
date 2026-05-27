@@ -9,7 +9,7 @@ Rgrains equips researchers with a nuanced understanding of particle dynamics, fa
 
 ---
 ## Install
-The Rgrains has three versions: CUI and GUI(exective format and matapp format).
+The Rgrains has three versions: CUI and GUI([exective format and matapp format are here.](https://github.com/keitaroyamada/Rgrains/releases/tag/v5.2.0)).
 ### CUI version
 1. Download all files in this repository
 2. After unzipped, add downloaded repository to the matlab path. 
