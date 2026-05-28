@@ -54,6 +54,7 @@ classdef rgrains < handle
                                         'save_fitted_image_with_Roundness',true,...
                                         'save_summary_image',true,...
                                         'save_csv',true,...
+                                        'save_each_circles_csv',false,...
                                         'save_annotation',false,...
                                         'annotation_target','Roundness',...%[supports params stored in rprops]
                                         'save_settings',false);%save settings for each image 
@@ -497,8 +498,15 @@ classdef rgrains < handle
                 result_table = struct2table(obj.rprops);
             end
 
-            result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0'});
-            result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0'};
+            if(obj.opts_export.save_each_circles_csv)
+                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0','R','Smallcircles'});
+                result_table.Smallcircles = cellfun(@(x) x(:, [3]), result_table.Smallcircles, 'UniformOutput', false);
+
+                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0','LargestInscribedCircleRadius_pix','SmallCircleRadius_pix'};
+            else
+                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0'});
+                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0'};
+            end
         end
     
         function [] = makeSummaryImage(obj, ax)
