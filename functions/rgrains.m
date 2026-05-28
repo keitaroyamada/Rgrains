@@ -22,7 +22,7 @@ classdef rgrains < handle
     methods (Access=public)
         function obj = rgrains()
             %initiarise;
-            obj.opts_rgrains   = struct('version','v5.2 (18 Sep 2025)');%this version is used for update check. DONOT change the format.
+            obj.opts_rgrains   = struct('version','v5.2.1 (28 May 2026)');%this version is used for update check. DONOT change the format.
             obj.opts_binarise  = struct('upconvert',false,...
                                         'particle_color', 'Dark',...
                                         'method','Adaptive',...
@@ -419,10 +419,13 @@ classdef rgrains < handle
                     d.Message = strcat('[',num2str(i),'/',num2str(world_cc.NumObjects),']: Calculating...',num2str(round(i / world_cc.NumObjects*100,1)),'%');
                     if d.CancelRequested
                         selection = uiconfirm(ax,'Cancel process?','Confirm Cancel','Icon','warning');
+                        disp(selection)
                         switch selection
                             case'OK'
                                 return
-                            case 'cancel'
+                            case 'Cancel'
+                                close(d)
+                                d = uiprogressdlg(ax,'Title','Now processing...','Cancelable','on');
                         end
                     end
                 end
