@@ -12,4 +12,7 @@
     <Category UUID="Deployment_Category_53b92447-853a-4274-bb57-3165d4480a86">
         <Label UUID="Deployment_MainFile_53b92447-853a-4274-bb57-3165d4480a86"/>
     </Category>
+    <Category UUID="Deployment_Category_82857f13-1380-4e77-b1c9-7ed92df71462">
+        <Label UUID="Deployment_ToolboxAppGalleryFiles_82857f13-1380-4e77-b1c9-7ed92df71462"/>
+    </Category>
 </Info>
