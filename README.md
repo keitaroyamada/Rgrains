@@ -9,7 +9,7 @@ Rgrains equips researchers with a nuanced understanding of particle dynamics, fa
 
 ---
 ## Install
-The Rgrains has three versions: CUI and GUI(exective format and matapp format).
+The Rgrains has three versions: CUI and GUI([exective format and matapp format are here.](https://github.com/keitaroyamada/Rgrains/releases/tag/v5.2.0)).
 ### CUI version
 1. Download all files in this repository
 2. After unzipped, add downloaded repository to the matlab path. 
@@ -48,3 +48,15 @@ Instructions on how to use each version is available in the Rgrains Usage (**[En
   - [source code](https://jp.mathworks.com/matlabcentral/fileexchange/60651-particle-roundness-and-sphericity-computation)
 - [Ishimura & Yamada (2019) Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://www.nature.com/articles/s41598-019-46584-z)
 ---
+
+## Publications using this application
+- [Ishimura & Yamada (2019): Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://doi.org/10.1038/s41598-019-46584-z)
+- [Ishimura & Yamada (2021): Integrated lateral correlation of tsunami deposits during the last 6000 years using multiple indicators at Koyadori, Sanriku Coast, northeast Japan](https://doi.org/10.1016/j.quascirev.2021.106834)
+- [石村・平峯（2024）: 十和田中掫テフラの漂着軽石と降下軽石の円磨度の違い─漂着軽石を特徴付ける指標の検討─](https://doi.org/10.4116/jaqua.63.2310)
+- [Ishimura & Hiramine (2025): Dispersion, fragmentation, abrasion, and organism attachment of drift pumice from the 2021 Fukutoku-Oka-no-Ba eruption in Japan](https://doi.org/10.1186/s40645-024-00678-z)
+- [Takahashi et al. (2025): Shape evolution of bulk sediment in headwater streams: effects of rock type and particle size](https://doi.org/10.5194/esurf-13-959-2025)
+- [Kaida et al. (2026): Source estimation of the 1703 Genroku tsunami through geological surveys and numerical simulations on Hachijo Island](https://doi.org/10.1186/s40645-026-00798-8)
+---
+
+
+
