@@ -16,6 +16,8 @@ classdef rgrains < handle
         im_bw;
         im_bw_overlay;
 
+        classifierModel;
+
         rprops;
     end
     
@@ -36,7 +38,8 @@ classdef rgrains < handle
                                         'image_scale',340,...%real scale of image[pix/cm]
                                         'PCD_normalisation',true,...%size normalising by PCD
                                         'PCD_size',300,...%target size of PCD
-                                        'Circularity_type','legacy');%type of circularity ['new', 'legacy']
+                                        'Circularity_type','legacy',...;%type of circularity ['new', 'legacy']
+                                        'filter_inaccurate_outline', false)
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
                                         'colour_smoothed_particle_boundaries','magenta',...
                                         'thickness_smoothed_particle_boundaries',1.5,...
@@ -56,8 +59,22 @@ classdef rgrains < handle
                                         'save_csv',true,...
                                         'save_each_circles_csv',false,...
                                         'save_annotation',false,...
+                                        'save_edge_annotation', false,...
                                         'annotation_target','Roundness',...%[supports params stored in rprops]
                                         'save_settings',false);%save settings for each image 
+        
+            %load classifier
+            classDir = fileparts(mfilename('fullpath'));
+            modelFile = fullfile(classDir, 'resultClassifier.mat');
+
+            if isfile(modelFile)
+                S = load(modelFile);
+                obj.classifierModel = S.trainedModel;
+            else
+                obj.classifierModel = [];
+                warning('trainedModel.mat not found: %s', modelFile);
+            end
+        
         end
         
         function [] = loadSettings(obj, load_path)
@@ -218,6 +235,11 @@ classdef rgrains < handle
                     im_bw(im_bw>=1)=1;
                     im_bw = logical(im_bw);
 
+                case 'ActiveContour'
+                    %mask = ones(size(im_grey));
+                    im_bw_base = bwareaopen((logical(imbinarize(im_grey, 'adaptive'))),obj.opts_binarise.noise_thresholds(1));
+                    im_bw = activecontour(imcomplement(im_grey), im_bw_base, 1000);
+
                 case 'None'
                     %without binarization
                     if islogical(im_grey)==1
@@ -267,6 +289,7 @@ classdef rgrains < handle
                             'Roundness',[],         'R',[],            'Smallcircles',[],...
                             'Majorlength',[],       'Minorlength',[],  'Aspect',[],...
                             'Circularity',[],       'PCD',[],          'delta0',[],...
+                            'Solidity',[],          'Extent',[],       'Eccentricity',[],     'EulerNumber',[],...
                             'Lval',[],              'aval', [],        'bval',[]);
             rprops = repmat(rprop, world_cc.NumObjects, 1);
 
@@ -345,9 +368,9 @@ classdef rgrains < handle
                 Y = boundary_points(:, 2);
 
                 %estimate other parameters
-                stats = boundary_regionprops(boundary_points, {'Area','Centroid','Perimeter','MajorAxisLength','MinorAxisLength','EquivDiameter','Circularity'});
+                stats = boundary_regionprops(boundary_points, {'Area','Centroid','Perimeter','MajorAxisLength','MinorAxisLength','EquivDiameter','Circularity','Solidity','Extent','EulerNumber','Eccentricity'});
                 if isempty(stats)==1
-                    disp(strcat('Empty detected. Particle No',num2str(i),'is skipped'))
+                    disp(strcat('Empty detected. Particle No_',num2str(i),'_is skipped'))
                     rprops(i).Majorlength = nan;
                     rprops(i).Minorlength = nan;
                     rprops(i).Aspect      = nan;
@@ -357,6 +380,11 @@ classdef rgrains < handle
                     rprops(i).Roundness   = nan;
                     rprops(i).PCD         = nan;
                     rprops(i).delta0      = nan;
+
+                    rprops(i).Solidity    = nan;
+                    rprops(i).Extent      = nan;
+                    rprops(i).EulerNumber = nan;
+                    rprops(i).Eccentricity= nan;
                 
                     %export results
                     obj.rprops = rprops;
@@ -365,11 +393,17 @@ classdef rgrains < handle
 
                 perimeter = stats(1).Perimeter;
                 equivdiameter = stats(1).EquivDiameter;
+
                 %area=stats(1).Area;
                 rprops(i).Majorlength = stats(1).MajorAxisLength / final_scale;%[pix->cm]
                 rprops(i).Minorlength = stats(1).MinorAxisLength / final_scale;%[pix->cm]
                 rprops(i).Aspect      = stats(1).MinorAxisLength / stats(1).MajorAxisLength;%[]
                 rprops(i).Area        = stats(1).Area / (final_scale^2);%[cm^2]
+                rprops(i).Solidity    = stats(1).Solidity;
+                rprops(i).Extent      = stats(1).Extent;
+                rprops(i).EulerNumber = stats(1).EulerNumber;
+                rprops(i).Eccentricity= stats(1).Eccentricity;
+
                 switch obj.opts_roundness.Circularity_type 
                     case 'legacy'
                         rprops(i).Circularity = round(4*pi*(( pi*((equivdiameter/2)-0.5)^2)/((perimeter)^2)),5);%Circularity
@@ -381,6 +415,20 @@ classdef rgrains < handle
                     %skip calculation of roundness
                     continue
                 end
+
+                if obj.opts_roundness.filter_inaccurate_outline
+                    if isempty(obj.classifierModel)==0
+                        checkTargetTable = struct2table(rprops(i),'AsArray', true );
+
+                        isAccurate = obj.classifierModel.predictFcn(checkTargetTable(:,obj.classifierModel.RequiredVariables));
+isAccurate
+                        if isAccurate == 0
+                            %skip calculation of roundness
+                            continue
+                        end
+                    end
+                end
+
                 %segmentted boundary
                 seglist = segment_boundary_m(X, Y, obj.opts_roundness.corner_sensitivity, 0);
 
@@ -449,15 +497,17 @@ classdef rgrains < handle
 
             %add results
             for i=1:length(obj.rprops)
+                %reconstruction of resolution
+                rs = (1/obj.rprops(i).ResolutionScale);
+
+                %smooth particle edges
+                X = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
+                Y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
+                plot(ax, X, Y, 'Color', obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', obj.opts_plot.thickness_smoothed_particle_boundaries);
+
                 if ~isempty(obj.rprops(i).Roundness)
                     if ~isnan(obj.rprops(i).R)
-                        %reconstruction of resolution
-                        rs = (1/obj.rprops(i).ResolutionScale);
-            
-                        %smooth particle edges
-                        X = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
-                        Y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
-                        plot(ax, X, Y, 'Color', obj.opts_plot.colour_smoothed_particle_boundaries,'LineWidth', obj.opts_plot.thickness_smoothed_particle_boundaries);
+                        
                         hold(ax,'on')
                         
                         %Maximum inscribed circle
@@ -499,13 +549,13 @@ classdef rgrains < handle
             end
 
             if(obj.opts_export.save_each_circles_csv)
-                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0','R','Smallcircles'});
+                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation','Solidity','Extent','Eccentricity','EulerNumber','Lval','aval','bval','PCD','delta0','R','Smallcircles'});
                 result_table.Smallcircles = cellfun(@(x) x(:, [3]), result_table.Smallcircles, 'UniformOutput', false);
 
-                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0','LargestInscribedCircleRadius_pix','SmallCircleRadius_pix'};
+                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation','Solidity','Extent','Eccentricity','EulerNumber','L*','a*','b*','PCD','delta0','LargestInscribedCircleRadius_pix','SmallCircleRadius_pix'};
             else
-                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation', 'Lval','aval','bval','PCD','delta0'});
-                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation', 'L*','a*','b*','PCD','delta0'};
+                result_table = result_table(:,{'Particlenumber','Roundness','Circularity','Majorlength','Minorlength','Aspect','Area','Orientation','Solidity','Extent','Eccentricity','EulerNumber','Lval','aval','bval','PCD','delta0'});
+                result_table.Properties.VariableNames = {'No','Roundness','Circularity','MajorLength_cm','MinorLength_cm','Aspect','Area_cm2','Orientation','Solidity','Extent','Eccentricity','EulerNumber','L*','a*','b*','PCD','delta0'};
             end
         end
     
@@ -674,6 +724,46 @@ classdef rgrains < handle
                 disp('Annotation xml is saved.');
             end
 
+            if obj.opts_export.save_edge_annotation
+                if length(varargin)==1
+                    if isempty(ax)==false
+                        d.Message = "Saving edge annotation yolo format...";
+                    end
+                end
+            
+                fid = fopen(fullfile(save_dir, strcat(obj.im_name, '.txt')), 'w');
+            
+                if fid == -1
+                    disp('Cannot open edge annotation file.');
+                else
+                    im_h = size(obj.im_in, 1);
+                    im_w = size(obj.im_in, 2);
+                    class_id = 0;
+            
+                    for i = 1:length(obj.rprops)
+                        if isempty(obj.rprops(i).Edges) || isempty(obj.rprops(i).ROI)
+                            continue
+                        end
+            
+                        rs = 1 / obj.rprops(i).ResolutionScale;
+            
+                        x = obj.rprops(i).ROI(1) + obj.rprops(i).Edges(:,1) .* rs;
+                        y = obj.rprops(i).ROI(2) + obj.rprops(i).Edges(:,2) .* rs;
+            
+                        x = min(max(x ./ im_w, 0), 1);
+                        y = min(max(y ./ im_h, 0), 1);
+            
+                        fprintf(fid, '%d', class_id);
+                        for j = 1:length(x)
+                            fprintf(fid, ' %.6f %.6f', x(j), y(j));
+                        end
+                        fprintf(fid, '\n');
+                    end
+            
+                    fclose(fid);
+                    disp('Edge annotation yolo txt is saved.');
+                end
+            end
 
             disp('Exporting...Done.');
             
