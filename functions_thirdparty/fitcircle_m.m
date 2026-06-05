@@ -49,7 +49,7 @@ function [z, r, residual] = fitcircle_m(x, varargin)
 error(nargchk(1, 5, nargin, 'struct'))
 
 % Default parameters for Gauss Newton minimisation
-params.maxits = 1000;
+params.maxits = 100;
 params.tol    = 1e-5;
 
 % Check x and get user supplied parameters
@@ -73,7 +73,7 @@ B = [x1.^2 + x2.^2, x1, x2, ones(m, 1)];
 
 % Least squares estimate is right singular vector corresp. to smallest
 % singular value of B
-[U, S, V] = svd(B);
+[~, ~, V] = svd(B, 0);
 u = V(:, 4);
 
 % For clarity, set the quadratic form variables
@@ -137,12 +137,19 @@ end
             %function is the distance to each point from the fitted circle
             %contained in u
 
-            % Objective function
-            f = (sqrt(sum((repmat(u(1:2), 1, m) - x).^2)) - u(3))';
-            
+            dx = u(1) - x1;
+            dy = u(2) - x2;
+
+            denom = sqrt(dx.^2 + dy.^2);
+
+            f = denom - u(3);
+
             % Jacobian
-            denom = sqrt( (u(1) - x1).^2 + (u(2) - x2).^2 );
-            J = [(u(1) - x1) ./ denom, (u(2) - x2) ./ denom, repmat(-1, m, 1)];
+            J = [dx ./ denom, dy ./ denom, -ones(m, 1)];
+
+            %f = (sqrt(sum((repmat(u(1:2), 1, m) - x).^2)) - u(3))';
+            %denom = sqrt( (u(1) - x1).^2 + (u(2) - x2).^2 );
+            %J = [(u(1) - x1) ./ denom, (u(2) - x2) ./ denom, repmat(-1, m, 1)];
         end % sys
         
     end % fitcircle_geometric

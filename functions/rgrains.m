@@ -413,17 +413,17 @@ classdef rgrains < handle
 
                 if obj.opts_roundness.calc_roundness ==false
                     %skip calculation of roundness
+                    
                     continue
                 end
 
                 if obj.opts_roundness.filter_inaccurate_outline
                     if isempty(obj.classifierModel)==0
                         checkTargetTable = struct2table(rprops(i),'AsArray', true );
-
                         isAccurate = obj.classifierModel.predictFcn(checkTargetTable(:,obj.classifierModel.RequiredVariables));
-isAccurate
                         if isAccurate == 0
                             %skip calculation of roundness
+                            disp(strcat('Inaccurate edge detected. Particle No_',num2str(i),'_is skipped'))
                             continue
                         end
                     end
@@ -486,6 +486,10 @@ isAccurate
         end
 
         function [] = makeResultImage(obj, ax)
+            if isempty(obj.rprops)
+                return
+            end
+
             %base image
             switch obj.opts_plot.base_image
                 case 'original'
