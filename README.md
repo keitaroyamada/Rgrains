@@ -11,7 +11,10 @@ Rgrainsは、画像から輪郭を抽出し、粒子形状を計測し、結果�
 ## Install / インストール
 
 Rgrains is available in three versions: a CUI add-on, a MATLAB app, and a standalone GUI application ([Downloads](https://github.com/keitaroyamada/Rgrains/releases)).  
+Note that the GUI version implements only a subset of the available options. For more advanced operations, please use the CLI version.  
+
 Rgrainsには、CUIアドオン、MATLABアプリ、スタンドアロンGUIアプリケーションの3つのバージョンがあります（[Downloads](https://github.com/keitaroyamada/Rgrains/releases)）。
+GUI版には一部のオプションのみが実装されています。より高度な操作には、CLI版をご活用ください。
 
 ### MATLAB app and CUI version / MATLABアプリ・CUI版
 
