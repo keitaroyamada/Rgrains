@@ -10,29 +10,30 @@ Rgrains equips researchers with a nuanced understanding of particle dynamics, fa
 ---
 ## Install
 The Rgrains has two versions: CUI addon and GUI app ([Downloads](https://github.com/keitaroyamada/Rgrains/releases)).
-### CUI version
-1. Download all files in this repository
-2. After unzipped, add downloaded repository to the matlab path. 
-
-### GUI version (matlab app)
-1. Download installer file from releases.
+### Matlab app & CUI version 
+1. Download toolbox installer file from [Releases](https://github.com/keitaroyamada/Rgrains/releases).
 2. Install from "Apps" tab in the Matlab.
 
 ### GUI version (executable file)
-1. Download the executable file from Releases.
-2. Follow the wizard to install.
+1. Download the executable file from [Releases](https://github.com/keitaroyamada/Rgrains/releases).
+#### For Windows
+2. Run the executable file and follow the wizard.
+#### For Mac
+2. Download & install Matlab runtime file from [here](https://jp.mathworks.com/products/compiler/matlab-runtime.html).
+3. Run the executable file
 
 ---
 ## Requirements (test emvironments)
 ### CUI version and GUI version (matlab app)
-- Matlab > 9.13 
-- Image processing toolbox > 11.6
-- Curve Fitting Toolbox > 3.8
+- Matlab > R2025a
+- Image processing toolbox
+- Curve Fitting Toolbox
 - ~~Statistics and Machine Learning Toolbox > 12.4~~ (Rgrains>5.0.3)
 - ~~Computer Vision Toolbox > 10.3~~ (Rgrains>5.0.3)
 
 ### GUI version (executable file) 
 - Windows 10, 11 (Intel)
+- Mac (Apple Silicon)
 - Matlab Runtime (Rgrains includes this online installer)
 
 ---
