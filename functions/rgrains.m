@@ -38,7 +38,7 @@ classdef rgrains < handle
                                         'image_scale',340,...%real scale of image[pix/cm]
                                         'PCD_normalisation',true,...%size normalising by PCD
                                         'PCD_size',300,...%target size of PCD
-                                        'Circularity_type','legacy',...;%type of circularity ['new', 'legacy']
+                                        'circularity_type','legacy',...;%type of circularity ['new', 'legacy']
                                         'filter_inaccurate_outline', false)
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
                                         'colour_smoothed_particle_boundaries','magenta',...
@@ -404,7 +404,7 @@ classdef rgrains < handle
                 rprops(i).EulerNumber = stats(1).EulerNumber;
                 rprops(i).Eccentricity= stats(1).Eccentricity;
 
-                switch obj.opts_roundness.Circularity_type 
+                switch obj.opts_roundness.circularity_type 
                     case 'legacy'
                         rprops(i).Circularity = round(4*pi*(( pi*((equivdiameter/2)-0.5)^2)/((perimeter)^2)),5);%Circularity
                     case 'new'
