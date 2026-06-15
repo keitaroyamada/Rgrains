@@ -81,11 +81,12 @@ Instructions for each version are available in the Rgrains Usage wiki: [English]
 ---
 
 ## Publications using this application / 本アプリケーションを使用した研究
-
-- [Ishimura & Yamada (2019): Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://doi.org/10.1038/s41598-019-46584-z)
-- [Ishimura & Yamada (2021): Integrated lateral correlation of tsunami deposits during the last 6000 years using multiple indicators at Koyadori, Sanriku Coast, northeast Japan](https://doi.org/10.1016/j.quascirev.2021.106834)
-- [石村・平峯（2024）: 十和田中掫テフラの漂着軽石と降下軽石の円磨度の違い─漂着軽石を特徴付ける指標の検討─](https://doi.org/10.4116/jaqua.63.2310)
-- [Ishimura & Hiramine (2025): Dispersion, fragmentation, abrasion, and organism attachment of drift pumice from the 2021 Fukutoku-Oka-no-Ba eruption in Japan](https://doi.org/10.1186/s40645-024-00678-z)
-- [Takahashi et al. (2025): Shape evolution of bulk sediment in headwater streams: effects of rock type and particle size](https://doi.org/10.5194/esurf-13-959-2025)
+- [Taya et al. (2026): Suitable Grain Size for Distinguishing Mainstem and Tributary Gravelly Deposits in Riverbeds and Terraces Using Roundness Image Analysis](https://doi.org/10.1111/iar.70051)
 - [Kaida et al. (2026): Source estimation of the 1703 Genroku tsunami through geological surveys and numerical simulations on Hachijo Island](https://doi.org/10.1186/s40645-026-00798-8)
+- [Takahashi et al. (2025): Shape evolution of bulk sediment in headwater streams: effects of rock type and particle size](https://doi.org/10.5194/esurf-13-959-2025)
+- [Ishimura & Hiramine (2025): Dispersion, fragmentation, abrasion, and organism attachment of drift pumice from the 2021 Fukutoku-Oka-no-Ba eruption in Japan](https://doi.org/10.1186/s40645-024-00678-z)
+- [石村・平峯（2024）: 十和田中掫テフラの漂着軽石と降下軽石の円磨度の違い─漂着軽石を特徴付ける指標の検討─](https://doi.org/10.4116/jaqua.63.2310)
+- [Ishimura & Yamada (2021): Integrated lateral correlation of tsunami deposits during the last 6000 years using multiple indicators at Koyadori, Sanriku Coast, northeast Japan](https://doi.org/10.1016/j.quascirev.2021.106834)
+- [Ishimura & Yamada (2019): Palaeo-tsunami inundation distances deduced from roundness of gravel particles in tsunami deposits](https://doi.org/10.1038/s41598-019-46584-z)
+
 ---
