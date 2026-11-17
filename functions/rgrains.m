@@ -86,25 +86,25 @@ classdef rgrains < handle
                 return
             end
 
-            load(load_path,"-mat");
+            settingsData = load(load_path,"-mat");
 
-            if exist('opts_binarise','var')
-                obj.opts_binarise = opts_binarise;
+            if isfield(settingsData, 'opts_binarise')
+                obj.opts_binarise = settingsData.opts_binarise;
             else
                 disp('There is no binarise settings.');
             end
             if exist('opts_export','var')
-                obj.opts_export   = opts_export;
+                obj.opts_export   = settingsData.opts_export;
             else
                 disp('There is no export settings.');
             end
             if exist('opts_plot','var')
-                obj.opts_plot     = opts_plot;
+                obj.opts_plot     = settingsData.opts_plot;
             else
                 disp('There is no plot settings.');
             end
             if exist('opts_roundness','var')
-                obj.opts_roundness= opts_roundness;
+                obj.opts_roundness= settingsData.opts_roundness;
             else
                 disp('There is no roundness settings.');
             end
