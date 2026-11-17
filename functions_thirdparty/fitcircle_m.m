@@ -53,7 +53,7 @@ params.maxits = 100;
 params.tol    = 1e-5;
 
 % Check x and get user supplied parameters
-[x, fNonlinear, params] = parseinputs(x, params, varargin{:});
+[x, useGeometricFit, params] = parseinputs(x, params, varargin{:});
 
 % Convenience variables
 m  = size(x, 2);
@@ -86,9 +86,11 @@ z = -b / (2*a);
 r = sqrt((norm(b)/(2*a))^2 - c/a);
 
 % 2) Nonlinear refinement to miminise geometric error, and compute residual
-if fNonlinear
+if useGeometricFit
+    disp(1)
     [z, r, residual] = fitcircle_geometric(x, z, r);
 else
+    disp(0)
     residual = norm(B * u);
 end
 
@@ -162,82 +164,86 @@ end % fitcircle
 
 
 
-function [x, fNonlinear, params] = parseinputs(x, params, varargin)
-% Make sure x is 2xN where N > 3
-if size(x, 2) == 2
-    x = x';
-end
-
-if size(x, 1) ~= 2
-    error('fitcircle:InvalidDimension', ...
-        'Input matrix must be two dimensional')
-end
-
-if size(x, 2) < 3
-    error('fitcircle:InsufficientPoints', ...
-        'At least 3 points required to compute fit')
-end
-
-% determine whether we are measuring geometric error (nonlinear), or
-% algebraic error (linear)
-fNonlinear = true;
-switch length(varargin)
-    % No arguments means a nonlinear least squares with defaul parameters
-    case 0
-        return
-       
-    % One argument can only be 'linear', specifying linear least squares
-    case 1
-        if strncmpi(varargin{1}, 'linear', length(varargin{1}))
-            fNonlinear = false;
+function [x, useGeometricFit, params] = parseinputs(x, params, varargin)
+    % Make sure x is 2xN where N > 3
+    if size(x, 2) == 2
+        x = x';
+    end
+    
+    if size(x, 1) ~= 2
+        error('fitcircle:InvalidDimension', ...
+            'Input matrix must be two dimensional')
+    end
+    
+    if size(x, 2) < 3
+        error('fitcircle:InsufficientPoints', ...
+            'At least 3 points required to compute fit')
+    end
+    
+    % determine whether we are measuring geometric error (nonlinear), or
+    % algebraic error (linear)
+    useGeometricFit = true;
+    
+    switch length(varargin)
+        % No arguments means a nonlinear least squares with defaul parameters
+        case 0
             return
-        else
-            error('fitcircle:UnknownOption', 'Unknown Option')
-        end
-        
-    % Otherwise we're left with user supplied parameters for Gauss Newton
-    otherwise
-        if rem(length(varargin), 2) ~= 0
-            error('fitcircle:propertyValueNotPair', ...
-                'Additional arguments must take the form of Property/Value pairs');
-        end
-
-        % Cell array of valid property names
-        properties = {'maxits', 'tol'};
-
-        while length(varargin) ~= 0
-            property = varargin{1};
-            value    = varargin{2};
-            
-            % If the property has been supplied in a shortened form, lengthen it
-            iProperty = find(strncmpi(property, properties, length(property)));
-            if isempty(iProperty)
-                error('fitcircle:UnkownProperty', 'Unknown Property');
-            elseif length(iProperty) > 1
-                error('fitcircle:AmbiguousProperty', ...
-                    'Supplied shortened property name is ambiguous');
+           
+        % One argument can be 'geometric' or 'algebraic'
+        case 1
+            if strncmpi(varargin{1}, 'geometric', length(varargin{1}))
+                useGeometricFit = true;
+                return
+            elseif strncmpi(varargin{1}, 'algebraic', length(varargin{1}))
+                useGeometricFit = false;
+                return
+            else
+                error('fitcircle:UnknownOption', 'Unknown Option')
             end
             
-            % Expand property to its full name
-            property = properties{iProperty};
-            
-            switch property
-                case 'maxits'
-                    if value <= 0
-                        error('fitcircle:InvalidMaxits', ...
-                            'maxits must be an integer greater than 0')
-                    end
-                    params.maxits = value;
-                case 'tol'
-                    if value <= 0
-                        error('fitcircle:InvalidTol', ...
-                            'tol must be a positive real number')
-                    end
-                    params.tol = value;
-            end % switch property
-            varargin(1:2) = [];
-        end % while
-
-end % switch length(varargin)
+        % Otherwise we're left with user supplied parameters for Gauss Newton
+        otherwise
+            if rem(length(varargin), 2) ~= 0
+                error('fitcircle:propertyValueNotPair', ...
+                    'Additional arguments must take the form of Property/Value pairs');
+            end
+    
+            % Cell array of valid property names
+            properties = {'maxits', 'tol'};
+    
+            while length(varargin) ~= 0
+                property = varargin{1};
+                value    = varargin{2};
+                
+                % If the property has been supplied in a shortened form, lengthen it
+                iProperty = find(strncmpi(property, properties, length(property)));
+                if isempty(iProperty)
+                    error('fitcircle:UnkownProperty', 'Unknown Property');
+                elseif length(iProperty) > 1
+                    error('fitcircle:AmbiguousProperty', ...
+                        'Supplied shortened property name is ambiguous');
+                end
+                
+                % Expand property to its full name
+                property = properties{iProperty};
+                
+                switch property
+                    case 'maxits'
+                        if value <= 0
+                            error('fitcircle:InvalidMaxits', ...
+                                'maxits must be an integer greater than 0')
+                        end
+                        params.maxits = value;
+                    case 'tol'
+                        if value <= 0
+                            error('fitcircle:InvalidTol', ...
+                                'tol must be a positive real number')
+                        end
+                        params.tol = value;
+                end % switch property
+                varargin(1:2) = [];
+            end % while
+    
+    end % switch length(varargin)
 
 end %parseinputs

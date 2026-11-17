@@ -39,7 +39,8 @@ classdef rgrains < handle
                                         'PCD_normalisation',true,...%size normalising by PCD
                                         'PCD_size',300,...%target size of PCD
                                         'circularity_type','legacy',...;%type of circularity ['new', 'legacy']
-                                        'filter_inaccurate_outline', false)
+                                        'filter_inaccurate_outline', false,...
+                                        'fit_circle_method','geometric');%['geometric', 'algebraic'
             obj.opts_plot      = struct('base_image','original',... %['original', 'bw']
                                         'colour_smoothed_particle_boundaries','magenta',...
                                         'thickness_smoothed_particle_boundaries',1.5,...
@@ -440,7 +441,7 @@ classdef rgrains < handle
 
                 %Probably an error will occur if it is a perfect circle
                 try
-                    [z, r] = compute_corner_circles_m(im_size, ob, convex, boundary_points, R, obj.opts_roundness.circle_precision, minpoints);%r:radius of small circles,z:centre of circles
+                    [z, r] = compute_corner_circles_m(im_size, ob, convex, boundary_points, R, obj.opts_roundness.circle_precision, minpoints, 'fit_method', obj.opts_roundness.fit_circle_method);%r:radius of small circles,z:centre of circles; fit_method: circle fit method ['geometric', 'algebraic']
                 catch ME
                     %z = 
                     %r = R;
