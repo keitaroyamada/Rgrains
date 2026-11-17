@@ -87,10 +87,8 @@ r = sqrt((norm(b)/(2*a))^2 - c/a);
 
 % 2) Nonlinear refinement to miminise geometric error, and compute residual
 if useGeometricFit
-    disp(1)
     [z, r, residual] = fitcircle_geometric(x, z, r);
 else
-    disp(0)
     residual = norm(B * u);
 end
 

@@ -469,7 +469,6 @@ classdef rgrains < handle
                     d.Message = strcat('[',num2str(i),'/',num2str(world_cc.NumObjects),']: Calculating...',num2str(round(i / world_cc.NumObjects*100,1)),'%');
                     if d.CancelRequested
                         selection = uiconfirm(ax,'Cancel process?','Confirm Cancel','Icon','warning');
-                        disp(selection)
                         switch selection
                             case'OK'
                                 return
@@ -479,7 +478,7 @@ classdef rgrains < handle
                         end
                     end
                 end
-                textprogress_m( i, world_cc.NumObjects, obj.im_name)
+                textprogress_m( i, world_cc.NumObjects, obj.im_name);
             end
 
             obj.rprops = rprops;
