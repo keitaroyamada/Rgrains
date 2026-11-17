@@ -4,6 +4,10 @@ Rgrains is image analysis software equipped with a series of functions for extra
 
 Rgrainsは、画像から輪郭を抽出し、粒子形状を計測し、結果を画像または表として出力するための各種機能を備えた画像解析ソフトウェアです。粒子の面積、円形度、長軸長、短軸長などの形状パラメータを計算できます。さらに、[Zheng & Hryciw (2015)](https://www.icevirtuallibrary.com/doi/abs/10.1680/geot.14.P.192) の革新的な手法に基づき、Wadellの定義に従った「円磨度（roundness）」も計算できます。本アプリは、粒子動態を詳細に理解するための情報を研究者に提供し、粒子挙動のより深い探究を支援します。本アプリケーションが科学的探究の幅を広げ、新たな研究の可能性を開き、粒子形状解析に関するより深く包括的な理解に貢献することを期待しています。
 
+After launching Rgrains, you can use an MCP-connected AI client (ChatGPT, Codex, Claude Desktop, etc.) to load images, change parameters and options, run analyses, adjust result displays, and export results.
+
+Rgrainsの起動後、MCPに接続したAIクライアント（ChatGPT、Codex、Claude Desktopなど）から、画像の読み込み、パラメータやオプションの変更、解析の実行、結果表示の調整、解析結果の保存などの主要操作を行えます。
+
 <img src="https://github.com/keitaroyamada/Rgrains/assets/146403785/1b86cd8b-ebb0-4097-a318-6111d179a578" width="500">
 
 ---
