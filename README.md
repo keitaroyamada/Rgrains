@@ -55,6 +55,7 @@ GUI版には一部のオプションのみが実装されています。より�
 - Curve Fitting Toolbox
 - ~~Statistics and Machine Learning Toolbox > 12.4~~ (Rgrains > 5.0.3)
 - ~~Computer Vision Toolbox > 10.3~~ (Rgrains > 5.0.3)
+- Instrument Control Toolbox (optional; required for AI client integration via MCP)
 
 ### GUI version (executable file) / GUI版（実行ファイル）
 
